@@ -1,3 +1,9 @@
+import ProductAgentUI from '@/components/product-agent-ui';
+
 export default function Home() {
-  return <></>;
+  return (
+    <main>
+      <ProductAgentUI />
+    </main>
+  );
 }
