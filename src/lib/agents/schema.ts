@@ -1,8 +1,8 @@
 // src/lib/agents/schema.ts
 
 export const masterSchema = {
-  // P0: Critical path for a minimum viable product definition.
-  P0: {
+  prd: {
+    title: 'Product Requirements Document (PRD)',
     product_overview: {
       title: 'Product Overview',
       questions: [
@@ -19,17 +19,6 @@ export const masterSchema = {
         'How will users achieve their main goal using these features?',
       ],
     },
-    technical_overview: {
-        title: 'Technical Overview',
-        questions: [
-            'What is the proposed technology stack (frontend, backend, database)?',
-            'Are there any key integrations with third-party services?',
-            'What are the high-level data models or schema?',
-        ]
-    }
-  },
-  // P1: Important details for a well-rounded product.
-  P1: {
     user_personas: {
       title: 'User Personas',
       questions: [
@@ -44,16 +33,6 @@ export const masterSchema = {
         'What are the key performance indicators (KPIs) to track?',
       ],
     },
-    non_functional_requirements: {
-        title: 'Non-Functional Requirements',
-        questions: [
-            'What are the expected performance and scalability requirements?',
-            'Are there any specific security or compliance considerations?',
-        ]
-    }
-  },
-  // P2: "Nice to have" details that can be fleshed out later.
-  P2: {
     future_roadmap: {
       title: 'Future Roadmap',
       questions: [
@@ -66,6 +45,32 @@ export const masterSchema = {
       questions: [
         'How will you acquire your first users?',
         'What is the planned pricing or monetization model?',
+      ],
+    },
+  },
+  edd: {
+    title: 'Engineering Design Document (EDD)',
+    technical_overview: {
+      title: 'Technical Overview',
+      questions: [
+        'What is the proposed technology stack (frontend, backend, database)?',
+        'Are there any key integrations with third-party services?',
+        'What are the high-level data models or schema?',
+      ],
+    },
+    system_architecture: {
+      title: 'System Architecture',
+      questions: [
+        'Provide a high-level diagram or description of the system architecture.',
+        'What are the major components and how do they interact?',
+      ],
+    },
+    non_functional_requirements: {
+      title: 'Non-Functional Requirements',
+      questions: [
+        'What are the expected performance and scalability requirements?',
+        'Are there any specific security or compliance considerations?',
+        'Describe the deployment and CI/CD strategy.',
       ],
     },
   },
