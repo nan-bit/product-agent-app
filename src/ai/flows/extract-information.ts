@@ -1,3 +1,4 @@
+
 // src/ai/flows/extract-information.ts
 'use server';
 /**
@@ -19,8 +20,8 @@ const ExtractInformationInputSchema = z.object({
 export type ExtractInformationInput = z.infer<typeof ExtractInformationInputSchema>;
 
 const ExtractInformationOutputSchema = z.object({
-  extractedInformation: z.string().describe('The extracted information mapped to the master schema.'),
-  contradictions: z.string().describe('Any contradictions identified in the user input.'),
+  extractedInformation: z.string().describe('A concise summary of the key information extracted from the user input that is relevant to the master schema.'),
+  contradictions: z.string().optional().describe('Any contradictions identified between the new user input and the previous conversation history.'),
 });
 export type ExtractInformationOutput = z.infer<typeof ExtractInformationOutputSchema>;
 
@@ -34,22 +35,22 @@ const extractInformationPrompt = ai.definePrompt({
   output: {schema: ExtractInformationOutputSchema},
   prompt: `You are the Analyst, also known as the Chief of Staff. Your role is to analyze user input and map relevant information to a master schema. You also need to identify any contradictions in the user input.
 
+Your primary goal is to extract only the NEW, RELEVANT information from the latest user input and summarize it concisely. Do not repeat information that is already in the conversation history.
+
 Master Schema:
 {{{masterSchema}}}
 
 Conversation History:
 {{{conversationHistory}}}
 
-User Input:
-{{{userInput}}}
+---
+Latest User Input:
+"{{{userInput}}}"
+---
 
-Extract the relevant information from the user input, map it to the master schema, and identify any contradictions. Return the extracted information and any contradictions found.
+Based *only* on the "Latest User Input", extract the key information that maps to the master schema. Identify any contradictions with the "Conversation History".
 
-Extracted Information:
-{{extractedInformation}}
-
-Contradictions:
-{{contradictions}}`,
+Return a JSON object with your findings.`,
 });
 
 const extractInformationFlow = ai.defineFlow(
