@@ -1,52 +1,60 @@
-import { defineFlow } from 'genkit';
-import { gemini15Pro } from 'genkit/ext/googleai'; // Assuming you'll use Pro for synthesis
+// src/ai/flows/synthesize-documents.ts
+'use server';
+/**
+ * @fileOverview A flow to synthesize and rewrite PRD and EDD documents.
+ * 
+ * - synthesizeDocuments - Rewrites the PRD and EDD from scratch.
+ * - SynthesizeDocumentsInput - The input type for the synthesizeDocuments function.
+ * - SynthesizeDocumentsOutput - The return type for the synthesizeDocuments function.
+ */
 
-export const synthesizeDocumentsFlow = defineFlow(
-  { name: 'synthesizeDocumentsFlow', 
-    inputSchema: z.object({
-    conversationHistory: z.array(z.object({ role: z.string(), parts: z.array(z.object({ text: z.string() })) })),
-    analystNotes: z.string(),
-    prd: z.string(),
-    edd: z.string(),
-  }),
-  outputSchema: z.object({
-    prd: z.string(),
-    edd: z.string(),
-  }),
+import {ai} from '@/ai/genkit';
+import {z} from 'genkit';
+
+const SynthesizeDocumentsInputSchema = z.object({
+    conversationHistory: z.string().describe("The history of the conversation."),
+    analystNotes: z.string().describe("The notes from the analyst."),
+});
+export type SynthesizeDocumentsInput = z.infer<typeof SynthesizeDocumentsInputSchema>;
+
+const SynthesizeDocumentsOutputSchema = z.object({
+    prd: z.string().describe("The rewritten Product Requirements Document in Markdown format."),
+    edd: z.string().describe("The rewritten Engineering Design Document in Markdown format."),
+});
+export type SynthesizeDocumentsOutput = z.infer<typeof SynthesizeDocumentsOutputSchema>;
+
+
+export async function synthesizeDocuments(input: SynthesizeDocumentsInput): Promise<SynthesizeDocumentsOutput> {
+    return synthesizeDocumentsFlow(input);
+}
+
+const synthesizeDocumentsPrompt = ai.definePrompt({
+    name: 'synthesizeDocumentsPrompt',
+    input: { schema: SynthesizeDocumentsInputSchema },
+    output: { schema: SynthesizeDocumentsOutputSchema },
+    prompt: `You are the Synthesizer, an expert document writer. Your task is to rewrite the Product Requirements Document (PRD) and the Engineering Design Document (EDD) from scratch on every turn. Use the full conversation history and the Analyst's notes to create complete, coherent, and professional-grade planning documents.
+
+Conversation History:
+{{{conversationHistory}}}
+
+Analyst's Notes:
+{{{analystNotes}}}
+
+Your goal is to produce documents that are well-structured, easy to understand, and cover all essential aspects of the product. The PRD and EDD should be in their most complete state, synthesizing information and inferring connections on every turn.
+
+Output the PRD and EDD in **markdown format**, including headings, lists, and any other relevant markdown syntax to make them clean and readable.
+`,
+});
+
+
+const synthesizeDocumentsFlow = ai.defineFlow(
+  { 
+    name: 'synthesizeDocumentsFlow', 
+    inputSchema: SynthesizeDocumentsInputSchema,
+    outputSchema: SynthesizeDocumentsOutputSchema,
 },
   async (input) => {
-    const { conversationHistory, analystNotes, prd, edd } = input;
-
-    // Use Gemini 1.5 Pro for synthesis for thoroughness
-    const llmResponse = await gemini15Pro.generate({
-      prompt: `Based on the conversation history and the analyst's notes, rewrite the PRD and EDD from scratch to ensure they are always complete and coherent. Pay close attention to detail and use all available information to create high-quality documents.
-
-        Conversation History: ${JSON.stringify(conversationHistory)}
-        Analyst's Notes: ${analystNotes}
-
-        Your goal is to produce professional-grade planning documents that development teams can use to execute effectively. The PRD and EDD should be well-structured, easy to understand, and cover all essential aspects of the product.
-
-        Ensure that the documents are always in their most complete state, synthesizing information and inferring connections on every turn.
-
-        Output the PRD and EDD in **markdown format**, including headings, lists, and any other relevant markdown syntax to make them clean and readable.
-
-        PRD:
-        ${prd}
-
-        EDD:
-        ${edd}`,
-        config: { maxOutputTokens: 4096 } // Increased output tokens for longer documents
-    });
-
-    const [updatedPrd, updatedEdd] = llmResponse.text().split('EDD:
-');
-
-    return {
-      prd: updatedPrd.replace('PRD:
-', '').trim(),
-      edd: updatedEdd.trim(),
-    };
+    const { output } = await synthesizeDocumentsPrompt(input);
+    return output!;
   }
 );
-
-import { z } from 'zod';
