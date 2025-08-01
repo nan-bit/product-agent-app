@@ -1,4 +1,3 @@
-
 // src/app/api/agent/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { extractInformation } from '@/ai/flows/extract-information';
@@ -28,6 +27,7 @@ export async function POST(req: NextRequest) {
     
     // Create a string representation of the conversation for the prompts
     const stringifiedHistory = currentConversationHistory.map(turn => `${turn.role}: ${turn.parts[0].text}`).join('\n');
+    let latestAnalystNote = '';
 
     if (userInput) {
       // 1. Analyst: Extract information from the new user input
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
         conversationHistory: stringifiedHistory,
       });
       
+      latestAnalystNote = extractionResult.extractedInformation;
       // Append new notes to existing ones
       currentAnalystNotes = `${currentAnalystNotes}\n- ${extractionResult.extractedInformation}`.trim();
 
@@ -44,10 +45,11 @@ export async function POST(req: NextRequest) {
       currentConversationHistory.push({ role: 'user', parts: [{ text: userInput }] });
     }
     
-    // 2. Synthesizer: Update documents based on all available information
+    // 2. Synthesizer: Update documents based on the latest analyst note
     const synthesisResult = await synthesizeDocuments({
-      conversationHistory: stringifiedHistory,
-      analystNotes: currentAnalystNotes,
+      analystNotes: latestAnalystNote,
+      prd: currentPrd,
+      edd: currentEdd,
     });
     currentPrd = synthesisResult.prd;
     currentEdd = synthesisResult.edd;
