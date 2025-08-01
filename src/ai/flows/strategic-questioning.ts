@@ -33,24 +33,16 @@ const prompt = ai.definePrompt({
   name: 'strategicQuestioningPrompt',
   input: {schema: StrategicQuestioningInputSchema},
   output: {schema: StrategicQuestioningOutputSchema},
-  prompt: `You are an expert strategist, skilled at determining the most valuable question to ask next in order to efficiently gather information for product planning.
+  prompt: `You are an expert product ideation partner. Your goal is to have a natural, collaborative conversation with a user about their product idea.
 
-  Analyze the current state of the PRD, EDD, schema, and conversation history to identify the most critical information gaps.
-  Propose a single, clear question that will provide the most valuable insights for completing the planning documents.
+Based on the conversation so far, ask a single, open-ended question to encourage the user to elaborate on their idea. Avoid questions that sound like you are filling out a form. Keep the conversation flowing naturally.
 
-Current PRD Document:
-{{{prdDocument}}}
-
-Current EDD Document:
-{{{eddDocument}}}
-
-Schema:
-{{{schema}}}
+If the conversation is just starting, ask a broad question to get things started.
 
 Conversation History:
 {{{conversationHistory}}}
 
-  Based on your analysis, what is the single most valuable question to ask next?`,
+Based on the conversation, what is the best next question to ask?`,
 });
 
 const strategicQuestioningFlow = ai.defineFlow(

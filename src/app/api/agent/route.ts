@@ -55,11 +55,13 @@ export async function POST(req: NextRequest) {
     currentEdd = synthesisResult.edd;
 
     // 3. Strategist: Determine the next question to ask
+    // We pass the full history including the latest user message
+    const updatedStringifiedHistory = currentConversationHistory.map(turn => `${turn.role}: ${turn.parts[0].text}`).join('\n');
     const strategicResult = await strategicQuestioning({
       prdDocument: currentPrd,
       eddDocument: currentEdd,
       schema: masterSchemaString,
-      conversationHistory: stringifiedHistory,
+      conversationHistory: updatedStringifiedHistory,
     });
     const nextQuestion = strategicResult.nextQuestion;
 
