@@ -19,28 +19,35 @@ export function useProductAgent() {
 
   const processAgentTurn = useCallback(async (userInput: string | null = null) => {
     setIsLoading(true);
+    console.log(`%c[AGENT_HOOK] ==> Sending request to /api/agent`, 'color: blue; font-weight: bold;', { userInput: userInput ?? '(initial)' });
 
     try {
+      const requestBody = {
+        userInput,
+        conversationHistory,
+        analystNotes,
+        prd,
+        edd,
+        uxd,
+      };
+      
+      console.log('[AGENT_HOOK] Request Body:', JSON.stringify(requestBody, null, 2));
+
       const response = await fetch('/api/agent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          userInput,
-          conversationHistory,
-          analystNotes,
-          prd,
-          edd,
-          uxd,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
-        throw new Error(`API Error: ${response.statusText}`);
+        throw new Error(`API Error: ${response.statusText} (${response.status})`);
       }
 
       const data = await response.json();
+      console.log('%c[AGENT_HOOK] <== Received response from /api/agent', 'color: green; font-weight: bold;');
+      console.log('[AGENT_HOOK] Response Data:', JSON.stringify(data, null, 2));
       
       if(data.error) {
           throw new Error(data.details || data.error);
@@ -65,7 +72,7 @@ export function useProductAgent() {
       }
 
     } catch (error) {
-      console.error('Failed to get response from agent:', error);
+      console.error('%c[AGENT_HOOK] !!! Error processing agent turn', 'color: red; font-weight: bold;', error);
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
       toast({
         variant: 'destructive',
@@ -82,26 +89,28 @@ export function useProductAgent() {
       ]);
     } finally {
       setIsLoading(false);
+      console.log('[AGENT_HOOK] Finished processing turn.');
     }
   }, [conversationHistory, analystNotes, prd, edd, uxd, toast]); 
 
   // Start conversation on initial load with an opening question
   useEffect(() => {
+    // This effect runs only once on mount
     if (messages.length === 0) {
+      console.log('[AGENT_HOOK] Initializing conversation.');
       setMessages([{
         id: `agent-${Date.now()}`,
         role: 'agent',
-        content: "Hello! I'm your AI Product Agent. Tell me about your product idea to get started.", // Your opening question
+        content: "Hello! I'm your AI Product Agent. Tell me about your product idea to get started.",
       }]);
-      // We don't call processAgentTurn() here anymore for the initial message
-      setIsLoading(false); // Set loading to false after setting initial message
+      setIsLoading(false);
     }
-    // No need for exhaustive-deps here as we only run once on mount
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []);
 
   const sendMessage = useCallback(async (content: string) => {
     if (!content.trim() || isLoading) return;
 
+    console.log('[AGENT_HOOK] Preparing to send user message.');
     const userMessage: Message = {
       id: `user-${Date.now()}`,
       role: 'user',
@@ -109,12 +118,73 @@ export function useProductAgent() {
     };
     setMessages(prev => [...prev, userMessage]);
     
-    // Add user message to a temporary history for the next API call
-    const newHistory = [...conversationHistory, { role: 'user' as const, parts: [{ text: content }] }];
-    setConversationHistory(newHistory); // Update conversation history immediately
+    // Immediately call the agent turn with the new user input
+    // We update the conversation history state right before the call in processAgentTurn
+    // to ensure it's as fresh as possible.
+    
+    // Create a temporary history for the API call to avoid state update delays
+    const tempHistory = [...conversationHistory, { role: 'user' as const, parts: [{ text: content }] }];
+    
+    // Use a temporary variable for the request body to ensure we are sending the latest data
+    const requestBody = {
+        userInput: content,
+        conversationHistory: tempHistory,
+        analystNotes,
+        prd,
+        edd,
+        uxd,
+    };
 
-    await processAgentTurn(content);
-  }, [isLoading, processAgentTurn, conversationHistory]);
+    setIsLoading(true);
+    console.log(`%c[AGENT_HOOK] ==> Sending request to /api/agent for user message`, 'color: blue; font-weight: bold;');
+    console.log('[AGENT_HOOK] Request Body:', JSON.stringify(requestBody, null, 2));
+
+
+    try {
+        const response = await fetch('/api/agent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestBody),
+        });
+
+        if (!response.ok) {
+            throw new Error(`API Error: ${response.statusText} (${response.status})`);
+        }
+
+        const data = await response.json();
+        console.log('%c[AGENT_HOOK] <== Received response from /api/agent', 'color: green; font-weight: bold;');
+        console.log('[AGENT_HOOK] Response Data:', JSON.stringify(data, null, 2));
+
+        if (data.error) {
+            throw new Error(data.details || data.error);
+        }
+
+        setPrd(data.prd);
+        setEdd(data.edd);
+        setUxd(data.uxd);
+        setAnalystNotes(data.analystNotes);
+        setConversationHistory(data.conversationHistory);
+
+        if (data.nextQuestion) {
+            setMessages(prev => [
+                ...prev,
+                { id: `agent-${Date.now()}`, role: 'agent', content: data.nextQuestion },
+            ]);
+        }
+    } catch (error) {
+        console.error('%c[AGENT_HOOK] !!! Error sending message', 'color: red; font-weight: bold;', error);
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+        toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: `Could not send message. ${errorMessage}`,
+        });
+    } finally {
+        setIsLoading(false);
+        console.log('[AGENT_HOOK] Finished processing message.');
+    }
+
+  }, [isLoading, conversationHistory, analystNotes, prd, edd, uxd, toast]);
 
   return { messages, prd, edd, uxd, isLoading, sendMessage };
 }
