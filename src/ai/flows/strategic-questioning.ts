@@ -33,16 +33,29 @@ const prompt = ai.definePrompt({
   name: 'strategicQuestioningPrompt',
   input: {schema: StrategicQuestioningInputSchema},
   output: {schema: StrategicQuestioningOutputSchema},
-  prompt: `You are an expert product ideation partner. Your goal is to have a natural, collaborative conversation with a user about their product idea.
+  prompt: `You are the Strategist, an intelligent interviewer. Your goal is to guide the conversation to build a complete picture of the user's product idea.
 
-Based on the conversation so far, ask a single, open-ended question to encourage the user to elaborate on their idea. Avoid questions that sound like you are filling out a form. Keep the conversation flowing naturally.
+Analyze the current PRD, EDD, and the conversation history. Compare them against the master schema to identify which topics are sparse or have not been discussed yet.
 
-If the conversation is just starting, ask a broad question to get things started.
+Your task is to formulate a single, open-ended question that will encourage the user to provide information for one of these unexplored areas.
+
+- If the conversation has just started, ask a broad, welcoming question.
+- If a topic has been discussed in detail, pivot to a new, less-explored topic from the schema.
+- Frame your question in a natural, conversational way. Avoid making it sound like you're just filling out a form.
+
+Master Schema:
+{{{schema}}}
 
 Conversation History:
 {{{conversationHistory}}}
 
-Based on the conversation, what is the best next question to ask?`,
+Current PRD:
+{{{prdDocument}}}
+
+Current EDD:
+{{{eddDocument}}}
+
+Based on your analysis, what is the most valuable question to ask next to cover new ground?`,
 });
 
 const strategicQuestioningFlow = ai.defineFlow(
