@@ -1,3 +1,4 @@
+
 // src/lib/agents/schema.ts
 
 export const masterSchema = {
@@ -7,23 +8,15 @@ export const masterSchema = {
       title: 'Product Overview',
       questions: [
         'What is the core problem you are trying to solve?',
-        'Who is the target user for this product?',
-        'What is the unique value proposition?',
+        'Who is the primary target audience?',
+        'What makes this product unique compared to alternatives?',
       ],
     },
     core_features: {
-      title: 'Core Features',
+      title: 'Core Features & Functionality',
       questions: [
         'What are the 3-5 most essential features for the first version?',
-        'Describe the primary user workflow from start to finish.',
-        'How will users achieve their main goal using these features?',
-      ],
-    },
-    user_personas: {
-      title: 'User Personas',
-      questions: [
-        'Can you describe a typical user in more detail? (e.g., their job, their technical skills)',
-        'What are their primary pain points related to the problem you are solving?',
+        'What does a user need to be able to do to solve the core problem?',
       ],
     },
     success_metrics: {
@@ -36,15 +29,8 @@ export const masterSchema = {
     future_roadmap: {
       title: 'Future Roadmap',
       questions: [
-        'What features are you considering for future versions?',
+        'What features are you considering for future versions after the initial launch?',
         'How do you see the product evolving over the next year?',
-      ],
-    },
-    go_to_market: {
-      title: 'Go-to-Market Strategy',
-      questions: [
-        'How will you acquire your first users?',
-        'What is the planned pricing or monetization model?',
       ],
     },
   },
@@ -54,23 +40,49 @@ export const masterSchema = {
       title: 'Technical Overview',
       questions: [
         'What is the proposed technology stack (frontend, backend, database)?',
-        'Are there any key integrations with third-party services?',
+        'Are there any key integrations with third-party services or APIs?',
         'What are the high-level data models or schema?',
       ],
     },
     system_architecture: {
       title: 'System Architecture',
       questions: [
-        'Provide a high-level diagram or description of the system architecture.',
+        'Can you describe the high-level system architecture? (e.g., monolith, microservices)',
         'What are the major components and how do they interact?',
       ],
     },
     non_functional_requirements: {
       title: 'Non-Functional Requirements',
       questions: [
-        'What are the expected performance and scalability requirements?',
-        'Are there any specific security or compliance considerations?',
-        'Describe the deployment and CI/CD strategy.',
+        'What are the expected performance and scalability needs?',
+        'Are there any specific security or data privacy considerations?',
+        'How will the application be deployed and monitored?',
+      ],
+    },
+  },
+  uxd: {
+    title: 'User Experience Document (UXD)',
+    look_and_feel: {
+      title: 'Look & Feel',
+      questions: [
+        'What is the desired aesthetic for the app? (e.g., modern, playful, corporate)',
+        'Are there any other apps or websites that have a similar style you admire?',
+        'Describe the ideal color palette and typography.',
+      ],
+    },
+    user_personas: {
+      title: 'User Personas',
+      questions: [
+        'Can you describe a typical user in more detail? (e.g., their job, goals, tech-savviness)',
+        'What are their primary frustrations with existing solutions?',
+      ],
+    },
+    user_journeys: {
+      title: 'User Journeys',
+      questions: [
+        'Describe the primary user workflow from discovering the app to achieving their main goal.',
+        'What is the onboarding experience like for a new user?',
+        'Are there any key secondary user flows we should consider?',
       ],
     },
   },

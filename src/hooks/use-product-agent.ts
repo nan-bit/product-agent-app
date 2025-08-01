@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -8,6 +9,7 @@ export function useProductAgent() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [prd, setPrd] = useState('');
   const [edd, setEdd] = useState('');
+  const [uxd, setUxd] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   const [conversationHistory, setConversationHistory] = useState<GenkitConversationHistory>([]);
@@ -30,6 +32,7 @@ export function useProductAgent() {
           analystNotes,
           prd,
           edd,
+          uxd,
         }),
       });
 
@@ -45,6 +48,7 @@ export function useProductAgent() {
 
       setPrd(data.prd);
       setEdd(data.edd);
+      setUxd(data.uxd);
       setAnalystNotes(data.analystNotes);
       setConversationHistory(data.conversationHistory);
 
@@ -79,7 +83,7 @@ export function useProductAgent() {
     } finally {
       setIsLoading(false);
     }
-  }, [conversationHistory, analystNotes, prd, edd, toast]); // Removed messages.length from deps
+  }, [conversationHistory, analystNotes, prd, edd, uxd, toast]); 
 
   // Start conversation on initial load with an opening question
   useEffect(() => {
@@ -112,5 +116,5 @@ export function useProductAgent() {
     await processAgentTurn(content);
   }, [isLoading, processAgentTurn, conversationHistory]);
 
-  return { messages, prd, edd, isLoading, sendMessage };
+  return { messages, prd, edd, uxd, isLoading, sendMessage };
 }

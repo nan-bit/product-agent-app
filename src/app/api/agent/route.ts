@@ -1,3 +1,4 @@
+
 // src/app/api/agent/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { extractInformation } from '@/ai/flows/extract-information';
@@ -18,12 +19,14 @@ export async function POST(req: NextRequest) {
       analystNotes: prevAnalystNotes,
       prd: prevPrd,
       edd: prevEdd,
+      uxd: prevUxd,
     } = body;
 
     let currentConversationHistory: GenkitConversationHistory = conversationHistory || [];
     let currentAnalystNotes = prevAnalystNotes || '';
     let currentPrd = prevPrd || '';
     let currentEdd = prevEdd || '';
+    let currentUxd = prevUxd || '';
     
     // Create a string representation of the conversation for the prompts
     const stringifiedHistory = currentConversationHistory.map(turn => `${turn.role}: ${turn.parts[0].text}`).join('\n');
@@ -50,9 +53,11 @@ export async function POST(req: NextRequest) {
       analystNotes: latestAnalystNote,
       prd: currentPrd,
       edd: currentEdd,
+      uxd: currentUxd,
     });
     currentPrd = synthesisResult.prd;
     currentEdd = synthesisResult.edd;
+    currentUxd = synthesisResult.uxd;
 
     // 3. Strategist: Determine the next question to ask
     // We pass the full history including the latest user message
@@ -60,6 +65,7 @@ export async function POST(req: NextRequest) {
     const strategicResult = await strategicQuestioning({
       prdDocument: currentPrd,
       eddDocument: currentEdd,
+      uxdDocument: currentUxd,
       schema: masterSchemaString,
       conversationHistory: updatedStringifiedHistory,
     });
@@ -72,6 +78,7 @@ export async function POST(req: NextRequest) {
       nextQuestion,
       prd: currentPrd,
       edd: currentEdd,
+      uxd: currentUxd,
       analystNotes: currentAnalystNotes,
       conversationHistory: currentConversationHistory,
     });

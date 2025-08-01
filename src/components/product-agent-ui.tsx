@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -16,7 +17,7 @@ import { ChatMessage } from './chat-message';
 import { ChatInput } from './chat-input';
 
 export default function ProductAgentUI() {
-  const { messages, prd, edd, isLoading, sendMessage } = useProductAgent();
+  const { messages, prd, edd, uxd, isLoading, sendMessage } = useProductAgent();
   const { toast } = useToast();
 
   const [isPanelVisible, setIsPanelVisible] = React.useState(true);
@@ -46,11 +47,11 @@ export default function ProductAgentUI() {
   };
 
   const copyToClipboard = () => {
-    const combinedDocs = `## Product Requirements Document (PRD)\n\n${prd}\n\n---\n\n## Engineering Design Document (EDD)\n\n${edd}`;
+    const combinedDocs = `## Product Requirements Document (PRD)\n\n${prd}\n\n---\n\n## Engineering Design Document (EDD)\n\n${edd}\n\n---\n\n## User Experience Document (UXD)\n\n${uxd}`;
     navigator.clipboard.writeText(combinedDocs);
     toast({
       title: 'Copied to clipboard',
-      description: 'PRD and EDD have been copied to your clipboard.',
+      description: 'PRD, EDD, and UXD have been copied to your clipboard.',
     });
   };
 
@@ -73,13 +74,14 @@ export default function ProductAgentUI() {
                 <TabsList>
                   <TabsTrigger value="prd">PRD</TabsTrigger>
                   <TabsTrigger value="edd">EDD</TabsTrigger>
+                  <TabsTrigger value="uxd">UXD</TabsTrigger>
                 </TabsList>
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={copyToClipboard}
-                    disabled={!prd && !edd}
+                    disabled={!prd && !edd && !uxd}
                   >
                     <Copy className="mr-2 h-4 w-4" /> Copy Documents
                   </Button>
@@ -120,6 +122,25 @@ export default function ProductAgentUI() {
                     ) : (
                      <div className="markdown-body p-6">
                         <ReactMarkdown>{edd || 'EDD will be generated here...'}</ReactMarkdown>
+                      </div>
+                    )}
+                  </ScrollArea>
+                </TabsContent>
+                <TabsContent value="uxd" className="mt-0 h-full">
+                  <ScrollArea className="h-full">
+                    {isLoading && !uxd ? (
+                      <div className="space-y-4 p-6">
+                        <Skeleton className="h-8 w-1/2" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="mt-4 h-8 w-1/3" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-5/6" />
+                      </div>
+                    ) : (
+                     <div className="markdown-body p-6">
+                        <ReactMarkdown>{uxd || 'UXD will be generated here...'}</ReactMarkdown>
                       </div>
                     )}
                   </ScrollArea>

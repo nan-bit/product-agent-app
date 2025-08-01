@@ -15,6 +15,7 @@ import {z} from 'genkit';
 const StrategicQuestioningInputSchema = z.object({
   prdDocument: z.string().describe('The current draft of the Product Requirements Document.'),
   eddDocument: z.string().describe('The current draft of the Engineering Design Document.'),
+  uxdDocument: z.string().describe('The current draft of the User Experience Document.'),
   schema: z.string().describe('The master schema defining all possible topics and questions.'),
   conversationHistory: z.string().describe('The history of the conversation so far.'),
 });
@@ -35,7 +36,7 @@ const prompt = ai.definePrompt({
   output: {schema: StrategicQuestioningOutputSchema},
   prompt: `You are the Strategist, an intelligent interviewer. Your goal is to guide the conversation to build a complete picture of the user's product idea.
 
-Analyze the current PRD, EDD, and the conversation history. Compare them against the master schema to identify which topics are sparse or have not been discussed yet.
+Analyze the current PRD, EDD, UXD, and the conversation history. Compare them against the master schema to identify which topics are sparse or have not been discussed yet.
 
 Your task is to formulate a single, open-ended question that will encourage the user to provide information for one of these unexplored areas.
 
@@ -54,6 +55,9 @@ Current PRD:
 
 Current EDD:
 {{{eddDocument}}}
+
+Current UXD:
+{{{uxdDocument}}}
 
 Based on your analysis, what is the most valuable question to ask next to cover new ground?`,
 });
