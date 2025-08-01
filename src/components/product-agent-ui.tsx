@@ -45,11 +45,12 @@ export default function ProductAgentUI() {
     document.removeEventListener('mouseup', handleMouseUp);
   };
 
-  const copyToClipboard = (text: string, documentName: string) => {
-    navigator.clipboard.writeText(text);
+  const copyToClipboard = () => {
+    const combinedDocs = `## Product Requirements Document (PRD)\n\n${prd}\n\n---\n\n## Engineering Design Document (EDD)\n\n${edd}`;
+    navigator.clipboard.writeText(combinedDocs);
     toast({
       title: 'Copied to clipboard',
-      description: `${documentName} has been copied to your clipboard.`,
+      description: 'PRD and EDD have been copied to your clipboard.',
     });
   };
 
@@ -77,18 +78,10 @@ export default function ProductAgentUI() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => copyToClipboard(prd, 'PRD')}
-                    disabled={!prd}
+                    onClick={copyToClipboard}
+                    disabled={!prd && !edd}
                   >
-                    <Copy className="mr-2 h-4 w-4" /> Copy PRD
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => copyToClipboard(edd, 'EDD')}
-                    disabled={!edd}
-                  >
-                    <Copy className="mr-2 h-4 w-4" /> Copy EDD
+                    <Copy className="mr-2 h-4 w-4" /> Copy Documents
                   </Button>
                 </div>
               </div>
