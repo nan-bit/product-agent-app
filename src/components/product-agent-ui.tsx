@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Bot, Copy, Loader2, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import { ThemeToggle } from './theme-toggle';
 import { ChatMessage } from './chat-message';
