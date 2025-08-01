@@ -1,13 +1,14 @@
 'use client';
 
 import * as React from 'react';
+import ReactMarkdown from 'react-markdown';
 import { useProductAgent } from '@/hooks/use-product-agent';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Bot, Copy, Loader2, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen } from 'lucide-react';
+import { Bot, Copy, Loader2, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { ThemeToggle } from './theme-toggle';
 import { ChatMessage } from './chat-message';
@@ -30,6 +31,7 @@ export default function ProductAgentUI() {
 
   const handleMouseMove = (e: MouseEvent) => {
     if (!isResizing.current) return;
+    // Calculate new width based on cursor position, but from the left edge of the screen
     const newWidth = (e.clientX / window.innerWidth) * 100;
     if (newWidth > 30 && newWidth < 70) {
       setDocPanelWidth(newWidth);
@@ -57,136 +59,137 @@ export default function ProductAgentUI() {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-background font-sans text-foreground">
-        {isPanelVisible && (
+      {/* Document Panel */}
+      {isPanelVisible && (
         <>
-            {/* Document Panel */}
-            <div
-                className="flex h-full flex-col"
-                style={{ width: `${docPanelWidth}%` }}
-            >
-                <Tabs defaultValue="prd" className="flex h-full flex-col">
-                <div className="flex h-14 items-center justify-between border-b border-r px-4">
-                    <TabsList>
-                    <TabsTrigger value="prd">PRD</TabsTrigger>
-                    <TabsTrigger value="edd">EDD</TabsTrigger>
-                    </TabsList>
-                    <div className="flex items-center gap-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => copyToClipboard(prd, 'PRD')}
-                        disabled={!prd}
-                    >
-                        <Copy className="mr-2 h-4 w-4" /> Copy PRD
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => copyToClipboard(edd, 'EDD')}
-                        disabled={!edd}
-                    >
-                        <Copy className="mr-2 h-4 w-4" /> Copy EDD
-                    </Button>
-                    </div>
+          <div
+            className="flex h-full flex-col"
+            style={{ width: `${docPanelWidth}%` }}
+          >
+            <Tabs defaultValue="prd" className="flex h-full flex-col">
+              <div className="flex h-14 items-center justify-between border-b border-r px-4">
+                <TabsList>
+                  <TabsTrigger value="prd">PRD</TabsTrigger>
+                  <TabsTrigger value="edd">EDD</TabsTrigger>
+                </TabsList>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => copyToClipboard(prd, 'PRD')}
+                    disabled={!prd}
+                  >
+                    <Copy className="mr-2 h-4 w-4" /> Copy PRD
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => copyToClipboard(edd, 'EDD')}
+                    disabled={!edd}
+                  >
+                    <Copy className="mr-2 h-4 w-4" /> Copy EDD
+                  </Button>
                 </div>
-                <div className="flex-1 overflow-hidden border-r">
-                    <TabsContent value="prd" className="mt-0 h-full">
-                    <ScrollArea className="h-full">
-                        {isLoading && !prd ? (
-                        <div className="space-y-4 p-6">
-                            <Skeleton className="h-8 w-1/2" />
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-3/4" />
-                            <Skeleton className="mt-4 h-8 w-1/3" />
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-5/6" />
-                        </div>
-                        ) : (
-                        <pre className="whitespace-pre-wrap p-6 font-sans text-sm">
-                            {prd || 'PRD will be generated here...'}
-                        </pre>
-                        )}
-                    </ScrollArea>
-                    </TabsContent>
-                    <TabsContent value="edd" className="mt-0 h-full">
-                    <ScrollArea className="h-full">
-                        {isLoading && !edd ? (
-                        <div className="space-y-4 p-6">
-                            <Skeleton className="h-8 w-1/2" />
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-3/4" />
-                            <Skeleton className="mt-4 h-8 w-1/3" />
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-5/6" />
-                        </div>
-                        ) : (
-                        <pre className="whitespace-pre-wrap p-6 font-sans text-sm">
-                            {edd || 'EDD will be generated here...'}
-                        </pre>
-                        )}
-                    </ScrollArea>
-                    </TabsContent>
-                </div>
-                </Tabs>
-            </div>
+              </div>
+              <div className="flex-1 overflow-hidden border-r">
+                <TabsContent value="prd" className="mt-0 h-full">
+                  <ScrollArea className="h-full">
+                    {isLoading && !prd ? (
+                      <div className="space-y-4 p-6">
+                        <Skeleton className="h-8 w-1/2" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="mt-4 h-8 w-1/3" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-5/6" />
+                      </div>
+                    ) : (
+                      <div className="markdown-body p-6">
+                        <ReactMarkdown>{prd || 'PRD will be generated here...'}</ReactMarkdown>
+                      </div>
+                    )}
+                  </ScrollArea>
+                </TabsContent>
+                <TabsContent value="edd" className="mt-0 h-full">
+                  <ScrollArea className="h-full">
+                    {isLoading && !edd ? (
+                      <div className="space-y-4 p-6">
+                        <Skeleton className="h-8 w-1/2" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="mt-4 h-8 w-1/3" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-5/6" />
+                      </div>
+                    ) : (
+                     <div className="markdown-body p-6">
+                        <ReactMarkdown>{edd || 'EDD will be generated here...'}</ReactMarkdown>
+                      </div>
+                    )}
+                  </ScrollArea>
+                </TabsContent>
+              </div>
+            </Tabs>
+          </div>
 
-            {/* Resizer */}
-            <div
-                className="w-2 cursor-col-resize bg-border/50 transition-colors hover:bg-border"
-                onMouseDown={handleMouseDown}
-            />
+          {/* Resizer */}
+          <div
+            className="w-2 cursor-col-resize bg-border/50 transition-colors hover:bg-border"
+            onMouseDown={handleMouseDown}
+          />
         </>
-        )}
-        {/* Chat Panel */}
-        <div
-            className="relative flex h-full flex-col"
-            style={{ width: isPanelVisible ? `${100 - docPanelWidth}%` : '100%' }}
-        >
-            <header className="flex h-14 items-center justify-between border-b px-4">
-            <div className="flex items-center gap-2">
-                <h1 className="text-lg font-semibold">Product Agent</h1>
-                <Bot className="h-7 w-7 text-primary" />
-            </div>
-            <div className="flex items-center gap-2">
-                <ThemeToggle />
-                <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsPanelVisible(!isPanelVisible)}
-                >
-                {isPanelVisible ? <PanelRightClose /> : <PanelRightOpen />}
-                </Button>
-            </div>
-            </header>
+      )}
 
-            <ScrollArea className="flex-1">
-            <div className="space-y-6 p-4 md:p-6">
-                {messages.map((msg) => (
-                <ChatMessage key={msg.id} message={msg} />
-                ))}
-                {isLoading && messages.length > 0 && (
-                <div className="flex items-start gap-3 justify-start">
-                    <Avatar className="h-8 w-8 border">
-                        <AvatarFallback className="bg-primary text-primary-foreground">
-                            <Bot className="h-5 w-5" />
-                        </AvatarFallback>
-                    </Avatar>
-                    <div className="flex items-center gap-2 rounded-2xl rounded-bl-none bg-card p-3 text-sm shadow-sm">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Thinking...</span>
-                    </div>
+      {/* Chat Panel */}
+      <div
+        className="relative flex h-full flex-col"
+        style={{ width: isPanelVisible ? `${100 - docPanelWidth}%` : '100%' }}
+      >
+        <header className="flex h-14 items-center justify-between border-b px-4">
+          <div className="flex items-center gap-2">
+             <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsPanelVisible(!isPanelVisible)}
+            >
+              {isPanelVisible ? <PanelLeftClose /> : <PanelLeftOpen />}
+            </Button>
+            <h1 className="text-lg font-semibold">Product Agent</h1>
+            <Bot className="h-7 w-7 text-primary" />
+          </div>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+          </div>
+        </header>
+
+        <ScrollArea className="flex-1">
+          <div className="space-y-6 p-4 md:p-6">
+            {messages.map((msg) => (
+              <ChatMessage key={msg.id} message={msg} />
+            ))}
+            {isLoading && messages.length > 0 && (
+              <div className="flex items-start gap-3 justify-start">
+                <Avatar className="h-8 w-8 border">
+                  <AvatarFallback className="bg-primary text-primary-foreground">
+                    <Bot className="h-5 w-5" />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex items-center gap-2 rounded-2xl rounded-bl-none bg-card p-3 text-sm shadow-sm">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Thinking...</span>
                 </div>
-                )}
-                <div ref={chatScrollAnchorRef} />
-            </div>
-            </ScrollArea>
+              </div>
+            )}
+            <div ref={chatScrollAnchorRef} />
+          </div>
+        </ScrollArea>
 
-            <div className="border-t p-4">
-            <ChatInput onSend={sendMessage} isLoading={isLoading} />
-            </div>
+        <div className="border-t p-4">
+          <ChatInput onSend={sendMessage} isLoading={isLoading} />
         </div>
+      </div>
     </div>
   );
 }
