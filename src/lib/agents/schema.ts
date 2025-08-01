@@ -1,88 +1,80 @@
 
-// src/lib/agents/schema.ts
+// This file defines the "question bank" for the workshop.
+// It maintains the original structure but refines the questions to be more user-friendly
+// and incorporates the principles of Atomic Design for the UXD.
 
 export const masterSchema = {
   prd: {
     title: 'Product Requirements Document (PRD)',
     product_overview: {
-      title: 'Product Overview',
+      title: '1. Product Overview & Vision',
       questions: [
-        'What is the core problem you are trying to solve?',
-        'Who is the primary target audience?',
-        'What makes this product unique compared to alternatives?',
+        "What is the single most important problem you're trying to solve?",
+        'Who is the primary audience that will benefit most from this solution?',
+        'Thinking long-term, what is the ultimate vision for this project?',
       ],
     },
     core_features: {
-      title: 'Core Features & Functionality',
+      title: '2. Core Features & User Journeys',
       questions: [
-        'What are the 3-5 most essential features for the first version?',
-        'What does a user need to be able to do to solve the core problem?',
+        "Describe the single most important task or journey a user will take to solve their core problem.",
+        'What are the most essential features needed to make that journey possible?',
+        "To help us focus, what's a feature we should intentionally leave out of the first version?",
       ],
     },
     success_metrics: {
-      title: 'Success Metrics',
+      title: '3. Success Metrics',
       questions: [
-        'How will you measure the success of this product?',
-        'What are the key performance indicators (KPIs) to track?',
+        'How will you know if this project is a success?',
+        'What is the one key metric we should measure for the first version?',
       ],
     },
     future_roadmap: {
-      title: 'Future Roadmap',
+      title: '4. Future Roadmap',
       questions: [
-        'What features are you considering for future versions after the initial launch?',
-        'How do you see the product evolving over the next year?',
+        "Looking beyond the first version, what's one thing you'd be excited to add next?",
       ],
     },
   },
   edd: {
     title: 'Engineering Design Document (EDD)',
     technical_overview: {
-      title: 'Technical Overview',
+      title: '1. Technical Overview',
       questions: [
-        'What is the proposed technology stack (frontend, backend, database)?',
-        'Are there any key integrations with third-party services or APIs?',
-        'What are the high-level data models or schema?',
+        "In simple terms, how do you envision this being built? (e.g., 'A modern web app', 'a mobile app'?)",
+        'Are there any key integrations with other services or APIs we need to consider?',
       ],
     },
-    system_architecture: {
-      title: 'System Architecture',
+    key_considerations: {
+      title: '2. Key Considerations',
       questions: [
-        'Can you describe the high-level system architecture? (e.g., monolith, microservices)',
-        'What are the major components and how do they interact?',
-      ],
-    },
-    non_functional_requirements: {
-      title: 'Non-Functional Requirements',
-      questions: [
-        'What are the expected performance and scalability needs?',
-        'Are there any specific security or data privacy considerations?',
-        'How will the application be deployed and monitored?',
+        'Will users need to create an account and log in?',
+        'Are there any specific security or data privacy concerns we need to be aware of?',
+        'What kind of information will the app need to remember or save for the user?',
       ],
     },
   },
   uxd: {
-    title: 'User Experience Document (UXD)',
-    look_and_feel: {
-      title: 'Look & Feel',
+    title: 'User Experience Document (UXD) - A Design System Approach',
+    design_atoms: {
+      title: '1. Core Design Language (Atoms)',
       questions: [
-        'What is the desired aesthetic for the app? (e.g., modern, playful, corporate)',
-        'Are there any other apps or websites that have a similar style you admire?',
-        'Describe the ideal color palette and typography.',
+        "Let's start building your design system. What is the personality or brand of your app? (e.g., 'playful', 'serious', 'modern')",
+        'Based on that personality, what should the primary brand color be?',
+        "And how should the text feel? (e.g., 'like a clean tech blog', 'like a classic newspaper')",
       ],
     },
-    user_personas: {
-      title: 'User Personas',
+    design_molecules: {
+      title: '2. Key Components (Molecules)',
       questions: [
-        'Can you describe a typical user in more detail? (e.g., their job, goals, tech-savviness)',
-        'What are their primary frustrations with existing solutions?',
+        "Now let's think about the building blocks of your UI. What are 2-3 of the most common, reusable components you'll need? (e.g., 'a search bar', 'a user profile card')",
       ],
     },
-    user_journeys: {
-      title: 'User Journeys',
+    design_templates: {
+      title: '3. Page Layouts (Templates)',
       questions: [
-        'Describe the primary user workflow from discovering the app to achieving their main goal.',
-        'What is the onboarding experience like for a new user?',
-        'Are there any key secondary user flows we should consider?',
+        'How should the main page of the app be laid out? Can you describe the major sections on that page?',
+        'What is the most important piece of information or action to present to the user on that main page?',
       ],
     },
   },
