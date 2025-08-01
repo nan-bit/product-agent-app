@@ -44,8 +44,7 @@ Use the full conversation history and the Analyst's notes to create complete, co
 
 ---
 
-Now, generate the complete PRD and EDD in Markdown format. Ensure your entire response is a single, valid JSON object that adheres to the output schema, containing the 'prd' and 'edd' fields.
-`,
+Now, generate the complete PRD and EDD in Markdown format. Ensure your entire response is a single, valid JSON object that adheres to the output schema, containing the 'prd' and 'edd' fields.`,
 });
 
 
