@@ -1,65 +1,52 @@
-// Synthesize Documents Flow
-'use server';
+import { defineFlow } from 'genkit';
+import { gemini15Pro } from 'genkit/ext/googleai'; // Assuming you'll use Pro for synthesis
 
-/**
- * @fileOverview This file defines the Genkit flow for synthesizing PRD and EDD documents.
- * 
- * - synthesizeDocuments - A function that orchestrates the document synthesis process.
- * - SynthesizeDocumentsInput - The input type for the synthesizeDocuments function.
- * - SynthesizeDocumentsOutput - The return type for the synthesizeDocuments function.
- */
+export const synthesizeDocumentsFlow = defineFlow(
+  { name: 'synthesizeDocumentsFlow', 
+    inputSchema: z.object({
+    conversationHistory: z.array(z.object({ role: z.string(), parts: z.array(z.object({ text: z.string() })) })),
+    analystNotes: z.string(),
+    prd: z.string(),
+    edd: z.string(),
+  }),
+  outputSchema: z.object({
+    prd: z.string(),
+    edd: z.string(),
+  }),
+},
+  async (input) => {
+    const { conversationHistory, analystNotes, prd, edd } = input;
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+    // Use Gemini 1.5 Pro for synthesis for thoroughness
+    const llmResponse = await gemini15Pro.generate({
+      prompt: `Based on the conversation history and the analyst's notes, rewrite the PRD and EDD from scratch to ensure they are always complete and coherent. Pay close attention to detail and use all available information to create high-quality documents.
 
-const SynthesizeDocumentsInputSchema = z.object({
-  conversationHistory: z.string().describe('The full conversation history between the user and the agent.'),
-  analystNotes: z.string().describe('The notes from the Analyst agent, summarizing key information and insights.'),
-});
-export type SynthesizeDocumentsInput = z.infer<typeof SynthesizeDocumentsInputSchema>;
+        Conversation History: ${JSON.stringify(conversationHistory)}
+        Analyst's Notes: ${analystNotes}
 
-const SynthesizeDocumentsOutputSchema = z.object({
-  prd: z.string().describe('The current draft of the Product Requirements Document (PRD).'),
-  edd: z.string().describe('The current draft of the Engineering Design Document (EDD).'),
-});
-export type SynthesizeDocumentsOutput = z.infer<typeof SynthesizeDocumentsOutputSchema>;
+        Your goal is to produce professional-grade planning documents that development teams can use to execute effectively. The PRD and EDD should be well-structured, easy to understand, and cover all essential aspects of the product.
 
-export async function synthesizeDocuments(input: SynthesizeDocumentsInput): Promise<SynthesizeDocumentsOutput> {
-  return synthesizeDocumentsFlow(input);
-}
+        Ensure that the documents are always in their most complete state, synthesizing information and inferring connections on every turn.
 
-const synthesizeDocumentsPrompt = ai.definePrompt({
-  name: 'synthesizeDocumentsPrompt',
-  input: {schema: SynthesizeDocumentsInputSchema},
-  output: {schema: SynthesizeDocumentsOutputSchema},
-  prompt: `You are a lead writer specializing in creating clear and comprehensive Product Requirements Documents (PRDs) and Engineering Design Documents (EDDs).
+        Output the PRD and EDD in **markdown format**, including headings, lists, and any other relevant markdown syntax to make them clean and readable.
 
-  Based on the conversation history and the analyst's notes, rewrite the PRD and EDD from scratch to ensure they are always complete and coherent. Pay close attention to detail and use all available information to create high-quality documents.
+        PRD:
+        ${prd}
 
-  Conversation History: {{{conversationHistory}}}
-  Analyst's Notes: {{{analystNotes}}}
+        EDD:
+        ${edd}`,
+        config: { maxOutputTokens: 4096 } // Increased output tokens for longer documents
+    });
 
-  Your goal is to produce professional-grade planning documents that development teams can use to execute effectively. The PRD and EDD should be well-structured, easy to understand, and cover all essential aspects of the product.
+    const [updatedPrd, updatedEdd] = llmResponse.text().split('EDD:
+');
 
-  Ensure that the documents are always in their most complete state, synthesizing information and inferring connections on every turn.
-
-  Output the PRD and EDD in plain text format. No need to add \`\`\`text\`\`\` blocks.
-
-  PRD:
-  {{prd}}
-
-  EDD:
-  {{edd}}`,
-});
-
-const synthesizeDocumentsFlow = ai.defineFlow(
-  {
-    name: 'synthesizeDocumentsFlow',
-    inputSchema: SynthesizeDocumentsInputSchema,
-    outputSchema: SynthesizeDocumentsOutputSchema,
-  },
-  async input => {
-    const {output} = await synthesizeDocumentsPrompt(input);
-    return output!;
+    return {
+      prd: updatedPrd.replace('PRD:
+', '').trim(),
+      edd: updatedEdd.trim(),
+    };
   }
 );
+
+import { z } from 'zod';

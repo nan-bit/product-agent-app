@@ -48,15 +48,9 @@ export function useProductAgent() {
       setAnalystNotes(data.analystNotes);
       setConversationHistory(data.conversationHistory);
 
-      if (messages.length === 0 && !userInput) {
-        // Initial message from agent
-         setMessages([{
-          id: `agent-${Date.now()}`,
-          role: 'agent',
-          content: data.nextQuestion,
-        }]);
-      } else {
-        setMessages(prev => [
+      // This part will now only add agent responses *after* the initial message
+      if (data.nextQuestion) {
+         setMessages(prev => [
           ...prev,
           {
             id: `agent-${Date.now()}`,
@@ -65,6 +59,7 @@ export function useProductAgent() {
           },
         ]);
       }
+
     } catch (error) {
       console.error('Failed to get response from agent:', error);
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
@@ -84,16 +79,21 @@ export function useProductAgent() {
     } finally {
       setIsLoading(false);
     }
-  }, [conversationHistory, analystNotes, prd, edd, toast, messages.length]);
+  }, [conversationHistory, analystNotes, prd, edd, toast]); // Removed messages.length from deps
 
-  // Start conversation on initial load
+  // Start conversation on initial load with an opening question
   useEffect(() => {
-    // Only fetch initial message if there are no messages yet.
     if (messages.length === 0) {
-      processAgentTurn();
+      setMessages([{
+        id: `agent-${Date.now()}`,
+        role: 'agent',
+        content: "Hello! I'm your AI Product Agent. Tell me about your product idea to get started.", // Your opening question
+      }]);
+      // We don't call processAgentTurn() here anymore for the initial message
+      setIsLoading(false); // Set loading to false after setting initial message
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // No need for exhaustive-deps here as we only run once on mount
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   const sendMessage = useCallback(async (content: string) => {
     if (!content.trim() || isLoading) return;
@@ -107,7 +107,8 @@ export function useProductAgent() {
     
     // Add user message to a temporary history for the next API call
     const newHistory = [...conversationHistory, { role: 'user' as const, parts: [{ text: content }] }];
-    
+    setConversationHistory(newHistory); // Update conversation history immediately
+
     await processAgentTurn(content);
   }, [isLoading, processAgentTurn, conversationHistory]);
 
