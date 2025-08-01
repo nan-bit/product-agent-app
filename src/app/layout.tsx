@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'ProductVerse',
+  title: 'Product Agent',
   description: 'An intelligent, conversational agent that acts as a strategic partner for product ideation.',
 };
 

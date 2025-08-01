@@ -1,4 +1,4 @@
-# ProductVerse
+# Product Agent
 
 This is an intelligent, conversational agent that acts as a strategic partner for product ideation.
 
