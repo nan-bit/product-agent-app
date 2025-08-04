@@ -1,134 +1,151 @@
+// src/lib/agents/schema.ts
 
-// This file defines the "question bank" for the workshop.
-// It maintains the original structure but refines the questions to be more user-friendly
-// and incorporates the principles of Atomic Design for the UXD.
+// This file defines the "question bank" for the workshop. It is structured around the
+// "Top 5" most critical sections for each document, with questions tailored for a non-technical user.
 
 export const masterSchema = {
   prd: {
     title: 'Product Requirements Document (PRD)',
-    product_overview: {
-      title: '1. Product Overview & Vision',
+    problem_statement: {
+      title: '1. Problem Statement (The "Why")',
       questions: [
-        "What is the single most important problem you're trying to solve?",
-        'Who is the primary audience that will benefit most from this solution?',
-        'Thinking long-term, what is the ultimate vision for this project?',
+        "Let's start with the most important thing. What is the single biggest problem you are trying to solve for people?",
+        "Why is solving this problem so important, both for the user and for the business?",
       ],
     },
-    core_features: {
-      title: '2. Core Features & User Journeys',
+    target_audience: {
+      title: '2. Target Audience (The "Who")',
       questions: [
-        "Describe the single most important task or journey a user will take to solve their core problem.",
-        'What are the most essential features needed to make that journey possible?',
-        "To help us focus, what's a feature we should intentionally leave out of the first version?",
+        'Who is the primary group of people that experiences this problem most acutely?',
+        "To help picture them, could you describe a typical person from that group?",
+      ],
+    },
+    core_user_journey: {
+      title: '3. Core User Journey (The "How")',
+      questions: [
+        "Imagine a user has just discovered your product. How do they solve their problem with it? Please walk me through the main steps they would take.",
+      ],
+    },
+    key_features: {
+      title: '4. Key Features (The "What")',
+      questions: [
+        'Based on that journey, what are the absolute essential features the first version of the product must have to work?',
+        "To keep us focused, what's a feature we should intentionally leave out for now?",
       ],
     },
     success_metrics: {
-      title: '3. Success Metrics',
+      title: '5. Success Metrics (The "Did it Work?")',
       questions: [
-        'How will you know if this project is a success?',
-        'What is the one key metric we should measure for the first version?',
-      ],
-    },
-    future_roadmap: {
-      title: '4. Future Roadmap',
-      questions: [
-        "Looking beyond the first version, what's one thing you'd be excited to add next?",
-      ],
-    },
-  },
-  edd: {
-    title: 'Engineering Design Document (EDD)',
-    technical_overview: {
-      title: '1. Technical Overview',
-      questions: [
-        "In simple terms, how do you envision this being built? (e.g., 'A modern web app', 'a mobile app'?)",
-        'Are there any key integrations with other services or APIs we need to consider?',
-      ],
-    },
-    key_considerations: {
-      title: '2. Key Considerations',
-      questions: [
-        'Will users need to create an account and log in?',
-        'Are there any specific security or data privacy concerns we need to be aware of?',
-        'What kind of information will the app need to remember or save for the user?',
+        "Fast forward to after you've launched. How will you know if the product is a success?",
+        "What's the one number you would track to measure that success?",
       ],
     },
   },
   uxd: {
-    title: 'User Experience Document (UXD) - A Design System Approach',
-    design_atoms: {
-      title: '1. Core Design Language (Atoms)',
+    title: 'User Experience Document (UXD)',
+    brand_personality: {
+      title: '1. Brand Personality & Vibe (The "Feeling")',
       questions: [
-        "Let's start building your design system. What is the personality or brand of your app? (e.g., 'playful', 'serious', 'modern')",
+        "Let's talk about the design. What is the overall personality you want the app to have? (e.g., 'playful and fun', 'serious and professional', 'modern and minimalist')",
+      ],
+    },
+    design_atoms: {
+      title: '2. Core Design Language (The "Atoms")',
+      questions: [
         'Based on that personality, what should the primary brand color be?',
-        "And how should the text feel? (e.g., 'like a clean tech blog', 'like a classic newspaper')",
+        "How should the text feel? (e.g., 'like a clean tech blog', or 'like a classic newspaper')",
       ],
     },
     design_molecules: {
-      title: '2. Key Components (Molecules)',
+      title: '3. Key Components (The "Lego Bricks")',
       questions: [
-        "Now let's think about the building blocks of your UI. What are 2-3 of the most common, reusable components you'll need? (e.g., 'a search bar', 'a user profile card')",
+        "What are the 2-3 most important, reusable 'building blocks' of your interface? (e.g., 'a search bar', 'a user profile header', 'a product card')",
       ],
     },
-    design_templates: {
-      title: '3. Page Layouts (Templates)',
+    main_screen_template: {
+      title: '4. Main Screen Layout (The "Blueprint")',
       questions: [
-        'How should the main page of the app be laid out? Can you describe the major sections on that page?',
-        'What is the most important piece of information or action to present to the user on that main page?',
+        'How should the most important page in the app be laid out?',
+        'What is the single most important action you want the user to take on that page?',
+      ],
+    },
+    accessibility: {
+      title: '5. Accessibility (For Everyone)',
+      questions: [
+        'Do we need to consider any special accessibility needs, like support for screen readers or keyboard-only use?',
       ],
     },
   },
   pdd: {
     title: 'Privacy Design Document (PDD)',
-    collection: {
-      title: '1. Data Collection',
+    data_collection: {
+      title: '1. Data We Need (The "What")',
       questions: [
-        'What user data is being collected at each step of any user journey? This includes data actively provided by the user (e.g., name, email during sign-up) and data generated by their activity (e.g., search history, location, usage logs).',
+        "What is the absolute minimum user information you'll need to collect for the app to function?",
+        'Will the app automatically generate any data based on user activity, like search history or usage logs?',
       ],
     },
-    use: {
-      title: '2. Data Use',
+    data_use: {
+      title: '2. Why We Need It (The "Why")',
       questions: [
-        'How is the collected data used? Does it power features, personalization, analytics, etc.? This needs to be clear for every piece of data collected within any journey.',
+        "In simple terms, why is collecting this data necessary for the user's experience?",
       ],
     },
-    sharing: {
-        title: '3. Data Sharing',
-        questions: [
-            'With whom is the data shared? This includes internal teams, other Google products, third parties, or the public.'
-        ]
+    user_control: {
+      title: '3. User Control (Their Power)',
+      questions: [
+        'How will you clearly inform users what data you collect?',
+        'Will a user be able to easily delete their account and all of their data?',
+      ],
     },
-    notice_consent_control: {
-        title: '4. Notice, Consent & Control',
-        questions: [
-            'How are users informed about data practices (notice)? Are they asked for consent where necessary? What controls do users have over their data (e.g., settings to opt-out, ability to edit or delete data)?'
-        ]
+    storage_security: {
+      title: '4. Our Responsibility',
+      questions: [
+        'Where will user data be stored?',
+        'Who on your team will have access to it?',
+      ],
     },
-    storage_access: {
-        title: '5. Data Storage & Access',
-        questions: [
-            'Where is the data stored, and who can access it? What security measures are in place?'
-        ]
+    biggest_risk: {
+      title: '5. The Biggest Risk',
+      questions: [
+        "What is the biggest privacy risk to your users that you are worried about?",
+        'What is one thing you can do in your design to help prevent that from happening?',
+      ],
     },
-    retention_deletion: {
-        title: '6. Data Retention & Deletion',
+  },
+  edd: {
+    title: 'Engineering Design Document (EDD)',
+    system_architecture: {
+        title: '1. System Architecture',
         questions: [
-            'How long is the data kept? What are the processes for data deletion, including user-initiated deletion?'
-        ]
+            "In simple terms, how do you envision this being built? (e.g., 'a modern web app', 'a mobile app'?)",
+        ],
     },
-    portability: {
-        title: '7. Data Portability',
+    technology_stack: {
+        title: '2. Technology Stack',
         questions: [
-            'Can users export their data?'
-        ]
+            "Are there any specific technologies or frameworks you have a strong preference for?",
+        ],
     },
-    risks_mitigations: {
-        title: '8. Risks & Mitigations',
+    data_model: {
+        title: '3. Data Model & Storage',
         questions: [
-            'What are the potential privacy risks to users (e.g., re-identification, unauthorized access) across their various interactions, and how are these risks mitigated?'
-        ]
-    }
-  }
+            "What is the main type of information the app will need to save?",
+        ],
+    },
+    authentication_security: {
+        title: '4. Authentication & Security',
+        questions: [
+            "Will users need to create an account and log in?",
+        ],
+    },
+    deployment: {
+        title: '5. Deployment & Operations',
+        questions: [
+            "How do you plan to monitor the app's health and performance after it's launched?",
+        ],
+    },
+  },
 };
 
 export const masterSchemaString = JSON.stringify(masterSchema, null, 2);
