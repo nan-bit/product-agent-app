@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
       prd: prevPrd,
       edd: prevEdd,
       uxd: prevUxd,
+      pdd: prevPdd,
     } = body;
 
     let currentConversationHistory: GenkitConversationHistory = conversationHistory || [];
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
     let currentPrd = prevPrd || '';
     let currentEdd = prevEdd || '';
     let currentUxd = prevUxd || '';
+    let currentPdd = prevPdd || '';
     
     // Create a string representation of the conversation for the prompts
     const stringifiedHistory = currentConversationHistory.map(turn => `${turn.role}: ${turn.parts[0].text}`).join('\n');
@@ -65,6 +67,7 @@ export async function POST(req: NextRequest) {
       prd: currentPrd,
       edd: currentEdd,
       uxd: currentUxd,
+      pdd: currentPdd,
     };
     console.log('[AGENT_ROUTE] Synthesizer Input:', JSON.stringify(synthesizerInput, null, 2));
     
@@ -74,6 +77,7 @@ export async function POST(req: NextRequest) {
     currentPrd = synthesisResult.prd;
     currentEdd = synthesisResult.edd;
     currentUxd = synthesisResult.uxd;
+    currentPdd = synthesisResult.pdd;
 
     // 3. Strategist: Determine the next question to ask
     // We pass the full history including the latest user message
@@ -84,6 +88,7 @@ export async function POST(req: NextRequest) {
       prdDocument: currentPrd,
       eddDocument: currentEdd,
       uxdDocument: currentUxd,
+      pddDocument: currentPdd,
       schema: masterSchemaString,
       conversationHistory: updatedStringifiedHistory,
     };
@@ -102,6 +107,7 @@ export async function POST(req: NextRequest) {
       prd: currentPrd,
       edd: currentEdd,
       uxd: currentUxd,
+      pdd: currentPdd,
       analystNotes: currentAnalystNotes,
       conversationHistory: currentConversationHistory,
     };

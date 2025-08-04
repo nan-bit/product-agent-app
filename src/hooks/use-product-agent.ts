@@ -10,6 +10,7 @@ export function useProductAgent() {
   const [prd, setPrd] = useState('');
   const [edd, setEdd] = useState('');
   const [uxd, setUxd] = useState('');
+  const [pdd, setPdd] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   const [conversationHistory, setConversationHistory] = useState<GenkitConversationHistory>([]);
@@ -29,6 +30,7 @@ export function useProductAgent() {
         prd,
         edd,
         uxd,
+        pdd,
       };
       
       console.log('[AGENT_HOOK] Request Body:', JSON.stringify(requestBody, null, 2));
@@ -56,6 +58,7 @@ export function useProductAgent() {
       setPrd(data.prd);
       setEdd(data.edd);
       setUxd(data.uxd);
+      setPdd(data.pdd);
       setAnalystNotes(data.analystNotes);
       setConversationHistory(data.conversationHistory);
 
@@ -91,7 +94,7 @@ export function useProductAgent() {
       setIsLoading(false);
       console.log('[AGENT_HOOK] Finished processing turn.');
     }
-  }, [conversationHistory, analystNotes, prd, edd, uxd, toast]); 
+  }, [conversationHistory, analystNotes, prd, edd, uxd, pdd, toast]); 
 
   // Start conversation on initial load with an opening question
   useEffect(() => {
@@ -133,6 +136,7 @@ export function useProductAgent() {
         prd,
         edd,
         uxd,
+        pdd,
     };
 
     setIsLoading(true);
@@ -162,6 +166,7 @@ export function useProductAgent() {
         setPrd(data.prd);
         setEdd(data.edd);
         setUxd(data.uxd);
+        setPdd(data.pdd);
         setAnalystNotes(data.analystNotes);
         setConversationHistory(data.conversationHistory);
 
@@ -184,7 +189,7 @@ export function useProductAgent() {
         console.log('[AGENT_HOOK] Finished processing message.');
     }
 
-  }, [isLoading, conversationHistory, analystNotes, prd, edd, uxd, toast]);
+  }, [isLoading, conversationHistory, analystNotes, prd, edd, uxd, pdd, toast]);
 
-  return { messages, prd, edd, uxd, isLoading, sendMessage };
+  return { messages, prd, edd, uxd, pdd, isLoading, sendMessage };
 }
