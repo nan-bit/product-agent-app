@@ -103,7 +103,7 @@ export default function ProductAgentUI() {
                       </div>
                     ) : (
                       <div className="markdown-body p-6">
-                        <ReactMarkdown>{prd || 'PRD will be generated here...'}</ReactMarkdown>
+                        <ReactMarkdown>{prd || 'Product Requirements Document will be generated here...'}</ReactMarkdown>
                       </div>
                     )}
                   </ScrollArea>
@@ -122,7 +122,7 @@ export default function ProductAgentUI() {
                       </div>
                     ) : (
                      <div className="markdown-body p-6">
-                        <ReactMarkdown>{edd || 'EDD will be generated here...'}</ReactMarkdown>
+                        <ReactMarkdown>{edd || 'Engineering Design Document will be generated here...'}</ReactMarkdown>
                       </div>
                     )}
                   </ScrollArea>
@@ -141,7 +141,7 @@ export default function ProductAgentUI() {
                       </div>
                     ) : (
                      <div className="markdown-body p-6">
-                        <ReactMarkdown>{uxd || 'UXD will be generated here...'}</ReactMarkdown>
+                        <ReactMarkdown>{uxd || 'User Experience Document will be generated here...'}</ReactMarkdown>
                       </div>
                     )}
                   </ScrollArea>
@@ -160,7 +160,7 @@ export default function ProductAgentUI() {
                       </div>
                     ) : (
                      <div className="markdown-body p-6">
-                        <ReactMarkdown>{pdd || 'PDD will be generated here...'}</ReactMarkdown>
+                        <ReactMarkdown>{pdd || 'Privacy Design Document will be generated here...'}</ReactMarkdown>
                       </div>
                     )}
                   </ScrollArea>
