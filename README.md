@@ -1,6 +1,6 @@
 # Product Agent - An Intelligent Planning System
 
-This project is a sophisticated, web-based conversational AI designed to act as a strategic partner in product development. It guides a user from a simple "vibe" or a complex idea to a set of professional-grade planning documents: a Product Requirements Document (PRD), a User Experience Document (UXD), and an Engineering Design Document (EDD).
+This project provides an intelligent agent that turns any idea into a complete, professional plan. More than just a chatbot, it acts as an expert interviewer for your product, design, and engineering needs, guiding you through a focused, one-question-at-a-time dialogue. The system synthesizes every piece of information into a continuously updated set of planning documents: a Product Requirements Document (PRD), a User Experience Document (UXD), and an Engineering Design Document (EDD). This ensures that at any point, you have a coherent and actionable plan ready to go.
 
 The application is built on a modern, secure Next.js foundation and leverages an advanced **multi-agent architecture** orchestrated by Google's Genkit. This allows for a dynamic, intelligent, and non-repetitive conversation that feels less like a script and more like a real product planning workshop.
 
