@@ -47,7 +47,7 @@ The application's intelligence comes from a sequential chain of agents, orchestr
 ## Getting Started
 
 ### Prerequisites
-*   Node.js and `yarn` installed.
+*   Node.js and `npm` installed.
 *   A Google Cloud project with the Vertex AI API enabled.
 *   A Gemini API Key.
 
@@ -59,7 +59,7 @@ cd product-agent-app
 
 ### 2. Install Dependencies
 ```bash
-yarn install```
+npm install```
 
 ### 3. Set Up Environment Variables
 Create a new file named `.env` in the root of the project. This file is included in `.gitignore` and will not be committed to source control. Add your secret API key to this file:
@@ -70,7 +70,7 @@ GOOGLE_API_KEY="YOUR_GEMINI_API_KEY_HERE"
 
 ### 4. Run the Development Server
 ```bash
-yarn dev
+npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
