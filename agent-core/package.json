@@ -19,7 +19,8 @@
   ],
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "tsx test/logic.test.ts"
+    "test": "tsx test/logic.test.ts",
+    "test:anthropic": "tsx --env-file=../server/.env test/anthropic.integration.test.ts"
   },
   "keywords": [
     "multi-agent",
