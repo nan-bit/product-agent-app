@@ -1,0 +1,48 @@
+{
+  "name": "@product-agent/agent-core",
+  "version": "0.1.0",
+  "description": "Framework-free multi-agent interview system. Interviews a user and maintains three living design documents (Product, Design, Engineering) via a supervisor + blackboard of specialist agents. No web framework, no HTTP, no UI — just the brain.",
+  "type": "module",
+  "license": "MIT",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "tsx test/logic.test.ts"
+  },
+  "keywords": [
+    "multi-agent",
+    "agents",
+    "requirements-elicitation",
+    "interview",
+    "genkit",
+    "product-planning"
+  ],
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "peerDependencies": {
+    "@genkit-ai/googleai": "^1.14.1",
+    "genkit": "^1.14.1"
+  },
+  "peerDependenciesMeta": {
+    "genkit": {
+      "optional": true
+    },
+    "@genkit-ai/googleai": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@genkit-ai/googleai": "^1.14.1",
+    "genkit": "^1.14.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5"
+  }
+}
