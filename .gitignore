@@ -1,5 +1,9 @@
 # dependencies
 /node_modules
+# nested workspace deps (agent-core, server)
+node_modules/
+# agent-core is a source-distributed library; consumers install their own deps
+agent-core/package-lock.json
 /.pnp
 .pnp.*
 
