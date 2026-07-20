@@ -1,13 +1,11 @@
-// Public API. Import the orchestrator + types from here; the Genkit adapter is
-// also re-exported for convenience but is optional (it pulls in the genkit peer
-// deps). To stay fully framework-free, import from "./orchestrator" and supply
-// your own LlmClient.
+// Public API — the framework-free core. Import the orchestrator, types, and the
+// LlmClient interface from here. Provider adapters live behind subpath exports
+// (`@product-agent/agent-core/adapters/anthropic`, `.../adapters/genkit`) so
+// importing the core never pulls in a provider SDK — you only load the adapter
+// you actually import.
 
 export { createInterviewSystem } from "./orchestrator";
 export type { InterviewSystem } from "./orchestrator";
-
-export { createGenkitClient } from "./adapters/genkit";
-export type { GenkitClientOptions } from "./adapters/genkit";
 
 export { POD_SPECS, INTERVIEWER_RUBRIC } from "./schema";
 export type { PodSpec } from "./schema";

@@ -181,14 +181,15 @@ vibe-coder audience.
 
 ## 8. Tech decisions
 
-- **Genkit stays**, isolated behind a thin `LlmClient` interface inside `agent-core`. Genkit is
-  an AI-orchestration library (structured output, schema validation, model abstraction, tracing),
-  not a web framework — keeping it does not compromise portability, and the framework we are
-  actually leaving is Next.js. The interface keeps Genkit types from leaking into the core's
-  public API, so the model/provider is swappable. *Override point:* if minimal dependencies
-  matter more than Genkit's ergonomics, drop to the raw model SDK behind the same interface.
-- **Cheap hosted model** (e.g. Gemini Flash / Flash-Lite class). Structured doc output via Zod
-  schemas. Small models are fine here because each agent has a narrow, well-scoped job.
+- **Provider-agnostic core with pluggable adapters.** `agent-core` depends only on a thin
+  `LlmClient` interface (structured output via Zod schemas); each provider lives behind its own
+  subpath adapter, so importing the core pulls in no provider SDK. Two adapters ship: **Anthropic**
+  (the primary — `messages.parse` + `zodOutputFormat`) and **Genkit/Gemini** (the alternate). The
+  server lazy-loads only the selected one. This is the portability thesis made real — a new
+  provider is a new adapter, nothing else changes.
+- **Cheap hosted model.** Default `claude-haiku-4-5` (cheapest Claude that supports structured
+  outputs); one env var (`ANTHROPIC_MODEL`) bumps it to Sonnet 5 / Opus 4.8. Extended thinking is
+  left off — each agent has a narrow, well-scoped job, so it isn't needed and adds latency/cost.
 - **Streaming** the trace + doc updates (SSE / ReadableStream) so the pod appears to work live.
 - **Ephemeral state** — the full session state round-trips through the client; no server storage.
 
@@ -252,7 +253,7 @@ they belong on the project-page "what's next" narrative, not in the live demo.
 | 5 | 10 turns per IP, graceful ending | Cost cap doubles as coverage-forcing feature |
 | 6 | Hosted cheap model, key server-side, rate-limited | Frictionless try; abuse/cost controlled |
 | 7 | Decouple into agent-core / server / island | Portable brain + native portfolio embed |
-| 8 | Keep Genkit, behind an adapter interface | AI lib, not the web framework we're leaving; swappable |
+| 8 | Provider-agnostic core; Anthropic (Claude) primary, Genkit alternate | Adapters behind LlmClient; new provider = new adapter; server lazy-loads the selected one |
 | 9 | Retire Next.js | Its role (fused brain+server+UI) is replaced by the three layers |
 
 ## 13. Research references

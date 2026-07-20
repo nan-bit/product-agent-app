@@ -6,7 +6,12 @@
   "license": "MIT",
   "main": "./src/index.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./orchestrator": "./src/orchestrator.ts",
+    "./llm": "./src/llm.ts",
+    "./types": "./src/types.ts",
+    "./adapters/anthropic": "./src/adapters/anthropic.ts",
+    "./adapters/genkit": "./src/adapters/genkit.ts"
   },
   "files": [
     "src",
@@ -21,17 +26,20 @@
     "agents",
     "requirements-elicitation",
     "interview",
-    "genkit",
     "product-planning"
   ],
   "dependencies": {
-    "zod": "^3.24.2"
+    "zod": "^4.4.3"
   },
   "peerDependencies": {
+    "@anthropic-ai/sdk": "^0.112.4",
     "@genkit-ai/googleai": "^1.14.1",
     "genkit": "^1.14.1"
   },
   "peerDependenciesMeta": {
+    "@anthropic-ai/sdk": {
+      "optional": true
+    },
     "genkit": {
       "optional": true
     },
@@ -40,8 +48,7 @@
     }
   },
   "devDependencies": {
-    "@genkit-ai/googleai": "^1.14.1",
-    "genkit": "^1.14.1",
+    "@anthropic-ai/sdk": "^0.112.4",
     "tsx": "^4.19.2",
     "typescript": "^5"
   }
