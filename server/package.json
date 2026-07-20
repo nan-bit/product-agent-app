@@ -1,0 +1,29 @@
+{
+  "name": "@product-agent/server",
+  "version": "0.1.0",
+  "description": "Thin streaming host for agent-core: a single POST /turn endpoint with per-IP turn budget and rate limiting. Deploys to Firebase App Hosting / Cloud Run.",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup src/index.ts --format esm --platform node --target node20 --bundle --noExternal @product-agent/agent-core --clean",
+    "start": "node dist/index.js",
+    "test": "tsx test/server.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@genkit-ai/googleai": "^1.14.1",
+    "@hono/node-server": "^1.13.7",
+    "@product-agent/agent-core": "file:../agent-core",
+    "genkit": "^1.14.1",
+    "hono": "^4.6.14",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5"
+  }
+}
