@@ -20,16 +20,22 @@ each agent did — so a UI can show the pod working live.
 
 ```bash
 npm install zod
-# Optional, only if you use the bundled Genkit adapter:
-npm install genkit @genkit-ai/googleai
+# Plus the SDK for whichever adapter you use (both are optional peer deps):
+npm install @anthropic-ai/sdk         # for the Anthropic adapter
+# npm install genkit @genkit-ai/googleai   # for the Genkit adapter
 ```
 
 ## Usage
 
-```ts
-import { createInterviewSystem, createGenkitClient } from "@product-agent/agent-core";
+The core is imported from the package root; each provider adapter has its own
+subpath, so importing the core never pulls in a provider SDK.
 
-const client = createGenkitClient({ model: "googleai/gemini-2.0-flash-lite" });
+```ts
+import { createInterviewSystem } from "@product-agent/agent-core";
+import { createAnthropicClient } from "@product-agent/agent-core/adapters/anthropic";
+// or: import { createGenkitClient } from "@product-agent/agent-core/adapters/genkit";
+
+const client = createAnthropicClient({ model: "claude-haiku-4-5" });
 const agent = createInterviewSystem(client, { maxTurns: 10 });
 
 let state = agent.createSession();
@@ -67,13 +73,14 @@ interface LlmClient {
 }
 ```
 
-The shipped `createGenkitClient` implements it with Genkit + Gemini, but any
-implementation works — the raw Google SDK, OpenAI, a local model, or a mock for
-tests. Genkit is a **peer dependency**; the core itself only depends on `zod`.
+Two adapters ship in `adapters/` (Anthropic and Genkit), but any implementation
+works — the raw SDKs, OpenAI, a local model, or a mock for tests. Both SDKs are
+**optional peer dependencies**, each isolated to its own adapter file; the core
+itself only depends on `zod`.
 
 ```
 src/
-  index.ts          public API
+  index.ts          public API (no provider SDK imported)
   types.ts          SessionState, Docs, TraceEvent, TurnResult
   llm.ts            LlmClient interface  (the provider seam)
   schema.ts         pod specs + the interviewer "avoid these mistakes" rubric
@@ -81,7 +88,8 @@ src/
   interviewer.ts    supervisor: opening / next-question / closing
   orchestrator.ts   createInterviewSystem() — the per-turn loop
   adapters/
-    genkit.ts       the ONLY file that imports Genkit
+    anthropic.ts    Claude adapter (messages.parse + zodOutputFormat)
+    genkit.ts       Genkit + Gemini adapter
 ```
 
 ## Develop

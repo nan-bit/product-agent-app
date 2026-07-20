@@ -1,9 +1,21 @@
+export type Provider = "anthropic" | "genkit";
+
 export interface ServerConfig {
   port: number;
-  /** Model reference passed to the Genkit adapter. */
-  model: string;
-  /** Gemini API key (server-side secret). */
-  apiKey?: string;
+  /** Which LLM adapter to use. */
+  provider: Provider;
+
+  // Anthropic (default provider)
+  anthropicApiKey?: string;
+  anthropicModel: string;
+
+  // Genkit / Gemini (alternate provider)
+  googleApiKey?: string;
+  genkitModel: string;
+
+  /** Max output tokens per model call. */
+  maxOutputTokens: number;
+
   /** Turn budget of a single interview session. */
   maxTurns: number;
   /** Total answer-turns one IP may spend per window before the demo cuts off. */
@@ -35,10 +47,19 @@ function list(value: string | undefined): string[] {
 }
 
 export function loadConfig(env: Env = process.env): ServerConfig {
+  const provider: Provider = env.LLM_PROVIDER === "genkit" ? "genkit" : "anthropic";
   return {
     port: num(env.PORT, 8080),
-    model: env.AGENT_MODEL ?? "googleai/gemini-2.0-flash-lite",
-    apiKey: env.GEMINI_API_KEY ?? env.GOOGLE_API_KEY,
+    provider,
+
+    anthropicApiKey: env.ANTHROPIC_API_KEY,
+    anthropicModel: env.ANTHROPIC_MODEL ?? "claude-haiku-4-5",
+
+    googleApiKey: env.GEMINI_API_KEY ?? env.GOOGLE_API_KEY,
+    genkitModel: env.AGENT_MODEL ?? "googleai/gemini-2.0-flash-lite",
+
+    maxOutputTokens: num(env.MAX_OUTPUT_TOKENS, 16000),
+
     maxTurns: num(env.MAX_TURNS, 10),
     ipTurnBudget: num(env.IP_TURN_BUDGET, 10),
     ipWindowMs: num(env.IP_WINDOW_MS, 24 * 60 * 60 * 1000),
@@ -46,4 +67,9 @@ export function loadConfig(env: Env = process.env): ServerConfig {
     maxAnswerChars: num(env.MAX_ANSWER_CHARS, 4000),
     allowedOrigins: list(env.ALLOWED_ORIGINS),
   };
+}
+
+/** Whether the API key for the selected provider is present. */
+export function hasProviderKey(config: ServerConfig): boolean {
+  return config.provider === "anthropic" ? !!config.anthropicApiKey : !!config.googleApiKey;
 }
