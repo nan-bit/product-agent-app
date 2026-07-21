@@ -1,0 +1,47 @@
+{
+  "name": "@product-agent/agent-core",
+  "version": "0.1.0",
+  "description": "Framework-free multi-agent interview system. Interviews a user and maintains three living design documents (Product, Design, Engineering) via a supervisor + blackboard of specialist agents. No web framework, no HTTP, no UI — just the brain.",
+  "type": "module",
+  "license": "MIT",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./orchestrator": "./src/orchestrator.ts",
+    "./llm": "./src/llm.ts",
+    "./types": "./src/types.ts",
+    "./adapters/anthropic": "./src/adapters/anthropic.ts"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "tsx test/logic.test.ts",
+    "test:anthropic": "tsx --env-file=../server/.env test/anthropic.integration.test.ts"
+  },
+  "keywords": [
+    "multi-agent",
+    "agents",
+    "requirements-elicitation",
+    "interview",
+    "product-planning"
+  ],
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@anthropic-ai/sdk": "^0.112.4"
+  },
+  "peerDependenciesMeta": {
+    "@anthropic-ai/sdk": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@anthropic-ai/sdk": "^0.112.4",
+    "tsx": "^4.19.2",
+    "typescript": "^5"
+  }
+}

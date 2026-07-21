@@ -1,0 +1,28 @@
+{
+  "name": "@product-agent/server",
+  "version": "0.1.0",
+  "description": "Thin streaming host for agent-core: a single POST /turn endpoint with per-IP turn budget and rate limiting. Deploys to Firebase App Hosting / Cloud Run.",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch --env-file-if-exists=.env src/index.ts",
+    "build": "tsup src/index.ts --format esm --platform node --target node20 --bundle --noExternal @product-agent/agent-core --external @anthropic-ai/sdk --clean",
+    "start": "node --env-file-if-exists=.env dist/index.js",
+    "test": "tsx test/server.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.112.4",
+    "@hono/node-server": "^1.13.7",
+    "@product-agent/agent-core": "file:../agent-core",
+    "hono": "^4.12.31",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5"
+  }
+}
