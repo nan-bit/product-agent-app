@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "dev": "tsx watch --env-file-if-exists=.env src/index.ts",
-    "build": "tsup src/index.ts --format esm --platform node --target node20 --bundle --noExternal @product-agent/agent-core --external @anthropic-ai/sdk --clean",
+    "build": "tsup",
     "start": "node --env-file-if-exists=.env dist/index.js",
     "test": "tsx test/server.test.ts",
     "typecheck": "tsc --noEmit"
