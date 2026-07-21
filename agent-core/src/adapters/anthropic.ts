@@ -15,10 +15,10 @@ export interface AnthropicClientOptions {
   maxTokens?: number;
 }
 
-// Haiku 4.5 is the cheapest Claude model that supports structured outputs —
-// plenty for these narrow, single-purpose agent jobs. Bump to claude-sonnet-5
-// or claude-opus-4-8 for higher-quality artifacts.
-const DEFAULT_MODEL = "claude-haiku-4-5";
+// Sonnet 5 produces noticeably richer artifacts than Haiku for these
+// doc-writing agents; drop to claude-haiku-4-5 for the cheapest/fastest option,
+// or claude-opus-4-8 for the highest quality.
+const DEFAULT_MODEL = "claude-sonnet-5";
 const DEFAULT_MAX_TOKENS = 16000;
 
 export function createAnthropicClient(options: AnthropicClientOptions = {}): LlmClient {

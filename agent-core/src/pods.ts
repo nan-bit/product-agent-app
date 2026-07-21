@@ -8,7 +8,7 @@ const PodOutputSchema = z.object({
   updatedDoc: z
     .string()
     .describe(
-      'The FULL updated Markdown document, integrating any new information from the latest answer. Keep all still-valid existing content; only revise what changed. Organize content under clear "##" section headings.',
+      'The FULL updated Markdown document in specific, readable prose (not terse fragments). Develop each relevant section; keep still-valid existing content and refine it. Organize content under clear "##" section headings.',
     ),
   extracted: z
     .string()
@@ -52,9 +52,11 @@ export async function runPod(
   const system = [
     spec.persona,
     "",
-    `Your document is the ${spec.docTitle}. Cover these sections when the conversation supports them: ${spec.sections.join(", ")}.`,
+    `Your document is the ${spec.docTitle}. Develop these sections in specific, readable prose under "##" headings: ${spec.sections.join(", ")}.`,
     "You work in parallel with the other pod leads. Write ONLY your own document, not theirs.",
-    "Never invent facts the user did not provide. Leave a section sparse rather than fabricating detail.",
+    "Be substantive. Expand each relevant section with concrete detail, examples, and the reasoning behind choices — the kind of draft a senior practitioner would write, not a bulleted stub.",
+    "Where the user hasn't specified something, propose a sensible default and label it 'Assumption:' or 'Recommendation:' so the draft keeps moving honestly. Never state an invented detail as if the user said it — but don't leave a bare '(to be defined)' placeholder either. Offer a thoughtful starting point they can correct.",
+    "Keep still-valid existing content and refine it as the conversation adds detail. Prioritize the sections the latest answer touches; enrich adjacent sections when it clearly follows.",
   ].join("\n");
 
   const prompt = [

@@ -53,7 +53,7 @@ export function loadConfig(env: Env = process.env): ServerConfig {
     provider,
 
     anthropicApiKey: env.ANTHROPIC_API_KEY,
-    anthropicModel: env.ANTHROPIC_MODEL ?? "claude-haiku-4-5",
+    anthropicModel: env.ANTHROPIC_MODEL ?? "claude-sonnet-5",
 
     googleApiKey: env.GEMINI_API_KEY ?? env.GOOGLE_API_KEY,
     genkitModel: env.AGENT_MODEL ?? "googleai/gemini-2.0-flash-lite",
