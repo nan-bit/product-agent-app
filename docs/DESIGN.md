@@ -5,7 +5,7 @@
 > a real dev pod. Hosted as a live, embeddable demo on [ernan.dev](https://ernan.dev);
 > its agent core is framework-free so anyone can grab it from GitHub and port it.
 
-Status: **Draft / spec we build from.** Last updated: 2026-07-20.
+Status: **Shipped** — live at [ernan.dev/projects/product-agent](https://ernan.dev/projects/product-agent). Last updated: 2026-07-21.
 
 ---
 
@@ -32,7 +32,7 @@ working together**. That collaboration must be visible, not hidden behind a spin
 - Three living docs (Product / Design / Engineering) updated **every turn**.
 - Make the multi-agent collaboration legible in the UI (visible "dev pod").
 - A **framework-free agent core** someone can fork from GitHub and reuse.
-- Runs on a **cheap hosted model** with strict cost/abuse controls.
+- Runs on a **hosted model** with strict cost/abuse controls.
 
 **Non-goals (for this demo)**
 - No accounts, no database, no persistence — each visitor gets a fresh session.
@@ -273,10 +273,28 @@ they belong on the project-page "what's next" narrative, not in the live demo.
 - Multi-agent orchestration patterns (supervisor / blackboard / pipeline / swarm):
   [guide](https://www.augmentcode.com/guides/multi-agent-orchestration-architecture-guide)
 
-## 14. Build order
+## 14. Status — shipped
 
-1. **`agent-core`** — extract the pod + interviewer loop, framework-free, Claude behind the
-   `LlmClient` interface, trace exposed for streaming. *(Keystone — both drivers hang on it.)*
-2. **`server`** — thin streaming `/turn` endpoint + per-IP turn limiting; deploy to App Hosting.
-3. **Portfolio island** — chat + three live docs + visible pod trace; embed on the project page.
-4. **Polish** — interview-quality tuning, coverage pacing, the graceful ending.
+All four layers are built, tested, and deployed:
+
+1. ✅ **`agent-core`** — the pod + interviewer loop, framework-free, Claude behind the `LlmClient`
+   interface, trace exposed for streaming. Covered by a stub logic test + a live integration test.
+2. ✅ **`server`** — streaming `/turn` (SSE) endpoint with per-IP turn limiting, on **Firebase App
+   Hosting** (Cloud Run); `ANTHROPIC_API_KEY` from Secret Manager. HTTP-layer test with a fake system.
+3. ✅ **Portfolio island** — full-viewport React island (chat + three live docs + an animated MAS
+   flow), embedded on the ernan.dev project page; talks to the backend over SSE.
+4. ✅ **Polish** — Sonnet 5 with develop-don't-transcribe prompts, a 4-turn coverage-aware budget,
+   and the graceful ending.
+
+### Deployment
+
+- **Backend:** `https://product-agent--ernan-dev.us-central1.hosted.app` — Firebase App Hosting →
+  Cloud Run (project `ernan-dev`, `maxInstances: 1`, model `claude-sonnet-5`, `master` branch CD).
+  `agent.ernan.dev` is the intended custom domain.
+- **Frontend:** the island on **[ernan.dev/projects/product-agent]** — Firebase Hosting, built with
+  `PUBLIC_AGENT_URL` pointing at the backend; CORS locked to `ernan.dev`.
+- **Caps:** 4 turns per IP, 30 requests/min per IP, and an answer-size limit — a full session runs
+  a few cents; drop to `claude-haiku-4-5` (env) to make it near-free.
+
+**Not shipped (still §11 future work):** brownfield repo ingestion, epics/stories/tasks, export to
+trackers, durable projects.
