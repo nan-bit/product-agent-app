@@ -1,5 +1,5 @@
-// An Anthropic (Claude) implementation of LlmClient. Like the Genkit adapter,
-// this is the only file that imports the provider SDK — the agents never see it.
+// An Anthropic (Claude) implementation of LlmClient. This is the only file that
+// imports the provider SDK — the agents never see it.
 // Uses Claude's structured-output support (messages.parse + zodOutputFormat) so
 // each agent gets a value validated against its Zod schema.
 import Anthropic from "@anthropic-ai/sdk";

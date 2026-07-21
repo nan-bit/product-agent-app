@@ -2,8 +2,8 @@ import { Hono } from "hono";
 import type { Context } from "hono";
 import { cors } from "hono/cors";
 import { streamSSE } from "hono/streaming";
-// Type-only import: erased at build time, so the HTTP layer never pulls in
-// Genkit. The real system is injected; tests inject a fake one.
+// Type-only import: erased at build time, so the HTTP layer never pulls in a
+// provider SDK. The real system is injected; tests inject a fake one.
 import type { InterviewSystem, SessionState } from "@product-agent/agent-core";
 import type { ServerConfig } from "./config";
 import { createRateLimiter } from "./ratelimit";

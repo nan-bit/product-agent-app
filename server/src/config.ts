@@ -1,18 +1,9 @@
-export type Provider = "anthropic" | "genkit";
-
 export interface ServerConfig {
   port: number;
-  /** Which LLM adapter to use. */
-  provider: Provider;
-
-  // Anthropic (default provider)
-  anthropicApiKey?: string;
-  anthropicModel: string;
-
-  // Genkit / Gemini (alternate provider)
-  googleApiKey?: string;
-  genkitModel: string;
-
+  /** Anthropic API key (server-side secret). */
+  apiKey?: string;
+  /** Claude model id. */
+  model: string;
   /** Max output tokens per model call. */
   maxOutputTokens: number;
 
@@ -47,19 +38,11 @@ function list(value: string | undefined): string[] {
 }
 
 export function loadConfig(env: Env = process.env): ServerConfig {
-  const provider: Provider = env.LLM_PROVIDER === "genkit" ? "genkit" : "anthropic";
   return {
     port: num(env.PORT, 8080),
-    provider,
-
-    anthropicApiKey: env.ANTHROPIC_API_KEY,
-    anthropicModel: env.ANTHROPIC_MODEL ?? "claude-sonnet-5",
-
-    googleApiKey: env.GEMINI_API_KEY ?? env.GOOGLE_API_KEY,
-    genkitModel: env.AGENT_MODEL ?? "googleai/gemini-2.0-flash-lite",
-
+    apiKey: env.ANTHROPIC_API_KEY,
+    model: env.ANTHROPIC_MODEL ?? "claude-sonnet-5",
     maxOutputTokens: num(env.MAX_OUTPUT_TOKENS, 16000),
-
     maxTurns: num(env.MAX_TURNS, 4),
     ipTurnBudget: num(env.IP_TURN_BUDGET, 4),
     ipWindowMs: num(env.IP_WINDOW_MS, 24 * 60 * 60 * 1000),
@@ -69,7 +52,6 @@ export function loadConfig(env: Env = process.env): ServerConfig {
   };
 }
 
-/** Whether the API key for the selected provider is present. */
-export function hasProviderKey(config: ServerConfig): boolean {
-  return config.provider === "anthropic" ? !!config.anthropicApiKey : !!config.googleApiKey;
+export function hasApiKey(config: ServerConfig): boolean {
+  return !!config.apiKey;
 }

@@ -1,0 +1,33 @@
+# Firebase App Hosting backend config for the Product Agent server.
+# https://firebase.google.com/docs/app-hosting/configure
+#
+# Create the App Hosting backend with this directory as its root:
+#   firebase apphosting:backends:create   (set root directory to /server)
+# Store the API key as a secret (never commit it):
+#   firebase apphosting:secrets:set anthropic-api-key
+
+runConfig:
+  # Cap concurrency/cost for a public demo. Raise if traffic warrants.
+  maxInstances: 1
+
+env:
+  - variable: ANTHROPIC_API_KEY
+    secret: anthropic-api-key
+    availability:
+      - RUNTIME
+  - variable: ANTHROPIC_MODEL
+    value: claude-sonnet-5
+    availability:
+      - RUNTIME
+  - variable: ALLOWED_ORIGINS
+    value: https://ernan.dev
+    availability:
+      - RUNTIME
+  - variable: MAX_TURNS
+    value: "4"
+    availability:
+      - RUNTIME
+  - variable: IP_TURN_BUDGET
+    value: "4"
+    availability:
+      - RUNTIME

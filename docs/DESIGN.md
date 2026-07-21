@@ -63,7 +63,7 @@ We separate them so the brain is portable and the UI is native to the portfolio.
 ```
 agent-core/     the portable brain — pure TypeScript, no web framework, no React, no HTTP.
                 the pod + interviewer agents, the blackboard state machine, the interview
-                strategy. Depends only on an LLM adapter (Genkit behind an interface).
+                strategy. Depends only on an LLM adapter (Claude behind an interface).
                 Public API: runTurn(state, answer) -> { state, docs, trace, nextQuestion, turnsLeft }
 
 server/         the thin brain host — imports agent-core, holds GOOGLE_API_KEY, exposes a
@@ -182,12 +182,12 @@ vibe-coder audience.
 
 ## 8. Tech decisions
 
-- **Provider-agnostic core with pluggable adapters.** `agent-core` depends only on a thin
-  `LlmClient` interface (structured output via Zod schemas); each provider lives behind its own
-  subpath adapter, so importing the core pulls in no provider SDK. Two adapters ship: **Anthropic**
-  (the primary — `messages.parse` + `zodOutputFormat`) and **Genkit/Gemini** (the alternate). The
-  server lazy-loads only the selected one. This is the portability thesis made real — a new
-  provider is a new adapter, nothing else changes.
+- **Provider-agnostic core, one shipped adapter.** `agent-core` depends only on a thin `LlmClient`
+  interface (structured output via Zod schemas); providers live behind a subpath adapter, so
+  importing the core pulls in no provider SDK. It ships a **Claude** adapter (`messages.parse` +
+  `zodOutputFormat`), which the server uses directly. This is the portability thesis made real — a
+  new provider is a new adapter, nothing else changes. (An early Genkit/Gemini adapter was dropped
+  once Claude was chosen.)
 - **Hosted model.** Default `claude-sonnet-5` for rich, developed artifacts (adaptive thinking on
   by default); `claude-haiku-4-5` for cheapest/fastest, `claude-opus-4-8` for highest quality — one
   env var (`ANTHROPIC_MODEL`). Richness comes mostly from the pod prompts: the specialists are told
@@ -256,7 +256,7 @@ they belong on the project-page "what's next" narrative, not in the live demo.
 | 5 | 4 turns per IP, graceful ending | Cost cap doubles as coverage-forcing feature |
 | 6 | Hosted cheap model, key server-side, rate-limited | Frictionless try; abuse/cost controlled |
 | 7 | Decouple into agent-core / server / island | Portable brain + native portfolio embed |
-| 8 | Provider-agnostic core; Anthropic (Claude) primary, Genkit alternate | Adapters behind LlmClient; new provider = new adapter; server lazy-loads the selected one |
+| 8 | Provider-agnostic core via LlmClient; ships a Claude adapter | New provider = new adapter; the early Genkit/Gemini adapter was dropped once Claude was chosen |
 | 9 | Retire Next.js | Its role (fused brain+server+UI) is replaced by the three layers |
 
 ## 13. Research references
@@ -275,7 +275,7 @@ they belong on the project-page "what's next" narrative, not in the live demo.
 
 ## 14. Build order
 
-1. **`agent-core`** — extract the pod + interviewer loop, framework-free, Genkit behind the
+1. **`agent-core`** — extract the pod + interviewer loop, framework-free, Claude behind the
    `LlmClient` interface, trace exposed for streaming. *(Keystone — both drivers hang on it.)*
 2. **`server`** — thin streaming `/turn` endpoint + per-IP turn limiting; deploy to App Hosting.
 3. **Portfolio island** — chat + three live docs + visible pod trace; embed on the project page.

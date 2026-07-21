@@ -1,8 +1,7 @@
 // Public API — the framework-free core. Import the orchestrator, types, and the
-// LlmClient interface from here. Provider adapters live behind subpath exports
-// (`@product-agent/agent-core/adapters/anthropic`, `.../adapters/genkit`) so
-// importing the core never pulls in a provider SDK — you only load the adapter
-// you actually import.
+// LlmClient interface from here. The provider adapter lives behind a subpath
+// export (`@product-agent/agent-core/adapters/anthropic`) so importing the core
+// never pulls in a provider SDK — you only load the adapter you actually import.
 
 export { createInterviewSystem } from "./orchestrator";
 export type { InterviewSystem } from "./orchestrator";

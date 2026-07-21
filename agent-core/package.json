@@ -10,8 +10,7 @@
     "./orchestrator": "./src/orchestrator.ts",
     "./llm": "./src/llm.ts",
     "./types": "./src/types.ts",
-    "./adapters/anthropic": "./src/adapters/anthropic.ts",
-    "./adapters/genkit": "./src/adapters/genkit.ts"
+    "./adapters/anthropic": "./src/adapters/anthropic.ts"
   },
   "files": [
     "src",
@@ -33,18 +32,10 @@
     "zod": "^4.4.3"
   },
   "peerDependencies": {
-    "@anthropic-ai/sdk": "^0.112.4",
-    "@genkit-ai/googleai": "^1.14.1",
-    "genkit": "^1.14.1"
+    "@anthropic-ai/sdk": "^0.112.4"
   },
   "peerDependenciesMeta": {
     "@anthropic-ai/sdk": {
-      "optional": true
-    },
-    "genkit": {
-      "optional": true
-    },
-    "@genkit-ai/googleai": {
       "optional": true
     }
   },
