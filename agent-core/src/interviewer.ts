@@ -49,6 +49,7 @@ const BASE_SYSTEM = [
   ...INTERVIEWER_RUBRIC.map((r) => `- ${r}`),
   "",
   "Vibe coders volunteer features but skip the unglamorous essentials. Actively probe for the things they leave implicit: the data model, authentication, edge cases, scale, privacy, and explicit non-goals.",
+  "Draw out specifics — if an answer is vague or generic, ask for a concrete example, a real scenario, or a number. The richer the user's answers, the richer the documents.",
   "Favor breadth before depth: make sure all three documents are usable before exploring any one of them deeply.",
 ].join("\n");
 

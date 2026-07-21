@@ -187,9 +187,11 @@ vibe-coder audience.
   (the primary — `messages.parse` + `zodOutputFormat`) and **Genkit/Gemini** (the alternate). The
   server lazy-loads only the selected one. This is the portability thesis made real — a new
   provider is a new adapter, nothing else changes.
-- **Cheap hosted model.** Default `claude-haiku-4-5` (cheapest Claude that supports structured
-  outputs); one env var (`ANTHROPIC_MODEL`) bumps it to Sonnet 5 / Opus 4.8. Extended thinking is
-  left off — each agent has a narrow, well-scoped job, so it isn't needed and adds latency/cost.
+- **Hosted model.** Default `claude-sonnet-5` for rich, developed artifacts (adaptive thinking on
+  by default); `claude-haiku-4-5` for cheapest/fastest, `claude-opus-4-8` for highest quality — one
+  env var (`ANTHROPIC_MODEL`). Richness comes mostly from the pod prompts: the specialists are told
+  to *develop* the idea (concrete detail, examples, labeled `Assumption:`/`Recommendation:`
+  defaults) rather than transcribe it, which is what turned dry stubs into real drafts.
 - **Streaming** the trace + doc updates (SSE / ReadableStream) so the pod appears to work live.
 - **Ephemeral state** — the full session state round-trips through the client; no server storage.
 
