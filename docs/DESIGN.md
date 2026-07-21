@@ -157,13 +157,14 @@ mistakes"** rubric (this rubric measurably improves question quality):
 Use a **least-to-most** shape: start broad, then decompose into sharper sub-questions
 (this outperformed zero-shot prompting for elicitation).
 
-### The 10-turn budget as a feature
+### The turn budget as a feature
 
-Sessions are capped at **10 turns per IP**. This is not only a cost cap — it forces
-**coverage-aware pacing**: the interviewer must make all three docs *usable* by turn 10, not
-deeply explore one. Turns ~8–10 shift to filling the weakest doc, and the session ends
-gracefully — "here's your architecture; take it and build" — with a genuinely complete artifact.
-A bounded interview that lands a full spec is a better demo than an open chat that trails off.
+Sessions are capped at a small budget (**4 turns**, matched by the per-IP cap). This is not only a
+cost control — it forces **coverage-aware pacing**: because the pods develop all three docs every
+turn, four focused exchanges land a genuinely usable spec, and the final turn fills the weakest doc
+before the session ends gracefully — "here's your architecture; take it and build." A short,
+bounded interview that lands a full spec is a better demo (and cheaper) than an open chat that
+trails off. Bump `MAX_TURNS` for a deeper interview.
 
 ## 7. Documents
 
@@ -202,7 +203,7 @@ vibe-coder audience.
 - `agent.ernan.dev` custom domain via Cloudflare DNS. Note: set the subdomain to **DNS-only
   (grey cloud)** during Firebase certificate provisioning; Cloudflare's proxy can block cert issuance.
 - **Abuse/cost controls** (all server-side):
-  - **10 turns per IP** per rolling window, then the graceful "build it yourself" ending.
+  - **4 turns per IP** per rolling window, then the graceful "build it yourself" ending.
   - Per-IP rate limiting on the endpoint.
   - A global **daily spend kill-switch / alert** (turn budget caps compute, not tokens).
   - `maxInstances` kept low in `apphosting.yaml` to hard-cap concurrency.
@@ -252,7 +253,7 @@ they belong on the project-page "what's next" narrative, not in the live demo.
 | 2 | Three docs/agents: Product, Design, Engineering | Mimics a real dev pod; drops separate Privacy doc |
 | 3 | Supervisor + blackboard MAS; pods write in parallel | Faster, crisper docs, visible collaboration |
 | 4 | Interviewer drives dynamic questioning + completeness check | Adaptive, non-repetitive, extracts implicit reqs |
-| 5 | 10 turns per IP, graceful ending | Cost cap doubles as coverage-forcing feature |
+| 5 | 4 turns per IP, graceful ending | Cost cap doubles as coverage-forcing feature |
 | 6 | Hosted cheap model, key server-side, rate-limited | Frictionless try; abuse/cost controlled |
 | 7 | Decouple into agent-core / server / island | Portable brain + native portfolio embed |
 | 8 | Provider-agnostic core; Anthropic (Claude) primary, Genkit alternate | Adapters behind LlmClient; new provider = new adapter; server lazy-loads the selected one |
@@ -276,6 +277,6 @@ they belong on the project-page "what's next" narrative, not in the live demo.
 
 1. **`agent-core`** — extract the pod + interviewer loop, framework-free, Genkit behind the
    `LlmClient` interface, trace exposed for streaming. *(Keystone — both drivers hang on it.)*
-2. **`server`** — thin streaming `/turn` endpoint + 10-turn/IP limiting; deploy to App Hosting.
+2. **`server`** — thin streaming `/turn` endpoint + per-IP turn limiting; deploy to App Hosting.
 3. **Portfolio island** — chat + three live docs + visible pod trace; embed on the project page.
 4. **Polish** — interview-quality tuning, coverage pacing, the graceful ending.

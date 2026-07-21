@@ -93,8 +93,8 @@ export async function runInterviewer(
 ): Promise<InterviewerDecision> {
   const last = history[history.length - 1];
   const nearEnd =
-    turnsLeft <= 2
-      ? "You are near the end of the interview. Prioritize filling the weakest document so that every document is usable."
+    turnsLeft <= 1
+      ? "This is the final question of the interview. Ask the single thing that most improves the weakest document so all three are usable."
       : "";
 
   const prompt = [

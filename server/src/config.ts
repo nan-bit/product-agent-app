@@ -60,8 +60,8 @@ export function loadConfig(env: Env = process.env): ServerConfig {
 
     maxOutputTokens: num(env.MAX_OUTPUT_TOKENS, 16000),
 
-    maxTurns: num(env.MAX_TURNS, 10),
-    ipTurnBudget: num(env.IP_TURN_BUDGET, 10),
+    maxTurns: num(env.MAX_TURNS, 4),
+    ipTurnBudget: num(env.IP_TURN_BUDGET, 4),
     ipWindowMs: num(env.IP_WINDOW_MS, 24 * 60 * 60 * 1000),
     requestsPerMinute: num(env.REQUESTS_PER_MINUTE, 30),
     maxAnswerChars: num(env.MAX_ANSWER_CHARS, 4000),

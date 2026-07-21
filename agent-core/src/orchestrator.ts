@@ -11,7 +11,7 @@ import { POD_KEYS } from "./types";
 import { runPod } from "./pods";
 import { generateClosing, generateOpening, runInterviewer } from "./interviewer";
 
-const DEFAULT_MAX_TURNS = 10;
+const DEFAULT_MAX_TURNS = 4;
 
 function emptyDocs(): Docs {
   return { product: "", design: "", engineering: "" };
